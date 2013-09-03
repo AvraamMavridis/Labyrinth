@@ -45,7 +45,7 @@ function scene:createScene( event )
 	 print(row.id .. " " .. row.content)
 	 score=display.newText("Highscore: " .. row.content, display.contentCenterX-100, display.contentCenterY-50)
 	 score.size=30
-	 score:setTextColor ( 0, 0, 0 )
+	 score:setTextColor ( 0, 173, 240 )
 	end
 	
 

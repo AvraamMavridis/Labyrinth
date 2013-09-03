@@ -5,7 +5,9 @@
 -----------------------------------------------------------------------------------------
 
 local storyboard = require( "storyboard" )
-local scene = storyboard.newScene()local sqlite3 = require "sqlite3"
+local scene = storyboard.newScene()
+
+local sqlite3 = require "sqlite3"
 local path = system.pathForFile("data.db", system.DocumentsDirectory)
 db = sqlite3.open( path )   
 
@@ -29,31 +31,37 @@ end
 local backBtn
 
 function scene:createScene( event )
-	local group = self.view	    --insert highscore
-	db:exec[[CREATE TABLE highscoretable (id INTEGER PRIMARY KEY, content INTEGER);]]	local highscorefill =[[INSERT INTO highscoretable VALUES (NULL, ']]..storyboard.state.score..[['); ]]
+	local group = self.view
+	
+
+
+    --insert highscore
+	db:exec[[CREATE TABLE highscoretable (id INTEGER PRIMARY KEY, content INTEGER);]]
+	local highscorefill =[[INSERT INTO highscoretable VALUES (NULL, ']]..storyboard.state.score..[['); ]]
 	db:exec( highscorefill )
 	
 	for row in db:nrows("SELECT * FROM highscoretable") do
 	 print(row.id .. " " .. row.content)
-	end	
+	end
+	
 	
 		-- display a background image
-	local background = display.newImageRect( "background.jpg", display.contentWidth, display.contentHeight )
+	local background = display.newImageRect( "background.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
 	
 
 	
-	local gameoverText=display.newText("Τέλος παιχνιδιού\nΤο τελικό σου σκορ είναι: " ..  storyboard.state.score,display.contentCenterX-100, display.contentCenterY-50, "Aka-AcidGR-Atomic", 40)
+	local gameoverText=display.newText("GAME OVER\nScore: " ..  storyboard.state.score,display.contentCenterX-100, display.contentCenterY-50)
 	gameoverText:setReferencePoint( display.CenterReferencePoint )
-	gameoverText:setTextColor (0, 0, 0 )
-	--gameoverText.x = display.contentWidth * 0.5
+	gameoverText:setTextColor (250, 250, 250 )
+	gameoverText.size=40
+	--gameover.x = display.contentWidth * 0.5
 	--gameoverText.y = 150
 	
 		backBtn = widget.newButton{
-		label="Mενού",
+		label="Menu",
 		labelColor = { default={255}, over={128} },
-		font="Aka-AcidGR-Atomic",
 		fontSize=25,
 		defaultFile="button.png",
 		overFile="button-over.png",
@@ -76,7 +84,9 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	local group = self.view
-	--audio.play(gameoverSound)		
+	--audio.play(gameoverSound)
+	
+	
 	
 end
 

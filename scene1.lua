@@ -30,7 +30,7 @@ local function onGyroscopeDataReceived( event )
     local deltaDegreesX = deltaRadiansX * (180 / math.pi)
     local deltaRadiansY = event.yRotation * event.deltaTime
     local deltaDegreesY = deltaRadiansY * (180 / math.pi)
-    ball:applyForce( -deltaDegreesX*2, -deltaDegreesY*2, ball.x, ball.y )
+    ball:applyForce( deltaDegreesX*2, -deltaDegreesY*2, ball.x, ball.y )
 end
 
 
@@ -104,15 +104,36 @@ function scene:createScene( event )
 	--borders.name="borders"
 	--borders.alpha=0.7
 	
-	exitscn=display.newImage("exit.png")
-	exitscn.x=display.contentWidth-30
-	exitscn.y=display.contentCenterY
-	exitscn.name="exitscn"
+	exitscn = display.newImage("exit.png")
+	exitscn.x = display.contentWidth-30
+	exitscn.y = display.contentCenterY
+	exitscn.name ="exitscn"
+
+	borderleft = display.newImage( "borderleftright.png" )
+	borderleft.x = 1
+	borderleft.y = display.contentCenterY
+
+	borderright = display.newImage( "borderleftright.png" )
+	borderright.x = display.contentWidth-1
+	borderright.y = display.contentCenterY
+
+	borderup = display.newImage( "borderupdown.png")
+	borderup.x = display.contentCenterX
+	borderup.y = 1
+
+	borderdown = display.newImage( "borderupdown.png")
+	borderdown.x = display.contentCenterX
+	borderdown.y = display.contentHeight - 1 
+
+	
+
+	
 	
 	physics.addBody (ball, "dynamic",physicsData:get("ball"))
 	physics.addBody (maze, "static",physicsData:get("mazelevel1_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel1_2"))
-	--physics.addBody (borders, "static",physicsData:get("borders"))
+    physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
+    physics.addBody (borderright, "static",{ friction=0.5, bounce=0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
 	ball:addEventListener ( "touch", nextScene )
@@ -125,7 +146,8 @@ function scene:createScene( event )
 	screenGroup:insert( ball )
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
-	--screenGroup:insert( borders )
+	screenGroup:insert( borderleft )
+	screenGroup:insert( borderright )
 	screenGroup:insert( exitscn )
 	
 
