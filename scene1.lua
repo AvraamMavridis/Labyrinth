@@ -30,7 +30,7 @@ local function onGyroscopeDataReceived( event )
     local deltaDegreesX = deltaRadiansX * (180 / math.pi)
     local deltaRadiansY = event.yRotation * event.deltaTime
     local deltaDegreesY = deltaRadiansY * (180 / math.pi)
-    ball:applyForce( -deltaDegreesX*3, -deltaDegreesY*3, ball.x, ball.y )
+    ball:applyForce( -deltaDegreesX*2, -deltaDegreesY*2, ball.x, ball.y )
 end
 
 
@@ -98,11 +98,11 @@ function scene:createScene( event )
 	maze2.y=display.contentCenterY
 	maze2.name="maze2"
 	
-	borders=display.newImage( "borders.png" , display.contentWidth, display.contentHeight )
-	borders:setReferencePoint( display.TopLeftReferencePoint )
-	borders.x, borders.y = 0, 0
-	borders.name="borders"
-	borders.alpha=0.7
+	--borders=display.newImage( "borders.png" , display.contentWidth, display.contentHeight )
+	--borders:setReferencePoint( display.TopLeftReferencePoint )
+	--borders.x, borders.y = 0, 0
+	--borders.name="borders"
+	--borders.alpha=0.7
 	
 	exitscn=display.newImage("exit.png")
 	exitscn.x=display.contentWidth-30
@@ -112,7 +112,7 @@ function scene:createScene( event )
 	physics.addBody (ball, "dynamic",physicsData:get("ball"))
 	physics.addBody (maze, "static",physicsData:get("mazelevel1_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel1_2"))
-	physics.addBody (borders, "static",physicsData:get("borders"))
+	--physics.addBody (borders, "static",physicsData:get("borders"))
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
 	ball:addEventListener ( "touch", nextScene )
@@ -125,7 +125,7 @@ function scene:createScene( event )
 	screenGroup:insert( ball )
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
-	screenGroup:insert( borders )
+	--screenGroup:insert( borders )
 	screenGroup:insert( exitscn )
 	
 
