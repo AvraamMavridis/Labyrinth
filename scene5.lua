@@ -156,11 +156,8 @@ end
 
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
-	
-	print( "1: exitScene event" )
 	physics.stop( )
     audio.stop()
-
 	Runtime:removeEventListener( "enterFrame", checkTime )
 	Runtime:removeEventListener( "enterFrame", mazeRotate )
     Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
@@ -171,8 +168,6 @@ end
 
 -- Called prior to the removal of scene's "view" (display group)
 function scene:destroyScene( event )
-
-	print( "((destroying scene 1's view))" )
 	package.loaded[physics] = nil
 	physics = nil
 end

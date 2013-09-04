@@ -9,7 +9,14 @@ local scene = storyboard.newScene()
 
 
 -- include Corona's "widget" library
+
 local widget = require "widget"
+
+
+
+
+
+
 
 	
 --------------------------------------------
@@ -21,9 +28,8 @@ local buttonClickSound = audio.loadSound("button_click.wav")
 
 
 local function onPlayBtnRelease()
-     audio.play(buttonClickSound)
+    audio.play(buttonClickSound)
 	storyboard.gotoScene( "scene4", "fade", 500 )
-
 	return true	
 end
 
@@ -31,21 +37,24 @@ end
 
 function scene:createScene( event )
 	local group = self.view
+	
+	
 
 	-- display a background image
-	local background = display.newImageRect( "background.jpg", display.contentWidth, display.contentHeight )
+	local background = display.newImageRect( "background.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
 	
-    local minotaur=display.newImage( "minotaur.png" )
-    minotaur.x=display.contentCenterX
-    minotaur.y=display.contentCenterY-80
+    --local minotaur=display.newImage( "minotaur.png" )
+    --minotaur.x=display.contentCenterX
+    --minotaur.y=display.contentCenterY-80
 	
 	
 	-- create a widget button (which will loads level1.lua on release)
 	playBtn = widget.newButton{
-		label="Επόμενη πίστα",
-		labelColor = { default={255}, over={128} },		font="Aka-AcidGR-Atomic",		fontSize=25,
+		label="Next Level",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
 		defaultFile="button.png",
 		overFile="button-over.png",
 		width=154, height=40,
@@ -61,7 +70,7 @@ function scene:createScene( event )
 	
 	-- all display objects must be inserted into group
 	group:insert( background )
-	group:insert( minotaur )
+	--group:insert( minotaur )
 	group:insert( playBtn )
 
 
@@ -70,23 +79,23 @@ end
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	local group = self.view
-	local scoreText=display.newText("Συνολικό σκορ: " .. storyboard.state.score, 0, 0, "Aka-AcidGR-Atomic", 35)
+	local scoreText = display.newText("Score: " .. storyboard.state.score, 0, 0)
 	scoreText:setReferencePoint( display.CenterReferencePoint )
-	scoreText:setTextColor (0, 0, 0 )
+	scoreText:setTextColor (216,223, 32 )
+	scoreText.size = 30
 	scoreText.x = display.contentWidth * 0.5
 	scoreText.y = 150
 	
-	local wikiText=display.newText("Η θανάτωση του Μινώταυρου συμβολίζει την κατάργηση \nτου βαρβαρικού έθιμου της ανθρωποθυσίας", 0, 0, "GFS Bodoni Rg", 14)
-	wikiText:setReferencePoint( display.CenterReferencePoint )
-	wikiText:setTextColor (0, 0, 0 )
-	wikiText.x = display.contentWidth * 0.5
-	wikiText.y = 185
+	--local wikiText=display.newText("Στην Ελληνική μυθολογία, ο Μινώταυρος ήταν ένα ον \nμε σώμα ανθρώπου και κεφάλι ταύρου.", 0, 0, "GFS Bodoni Rg", 14)
+	--wikiText:setReferencePoint( display.CenterReferencePoint )
+	--wikiText:setTextColor (0, 0, 0 )
+	--wikiText.x = display.contentWidth * 0.5
+	--wikiText.y = 185
 	
 	group:insert(scoreText)
-	group:insert(wikiText)
+	--group:insert(wikiText)
     storyboard.removeAll()
   
-	-- INSERT code here (e.g. start timers, load audio, start listeners, etc.)
 	
 end
 

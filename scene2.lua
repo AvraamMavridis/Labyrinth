@@ -20,7 +20,7 @@ local displayTime,background,ball,maze,maze2,borders,exitscn
 local startTime=0
 local levelTime = 20
 local score=0
-local now
+local now=0
 local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 
@@ -60,6 +60,16 @@ end
 local function checkTime(event)
   now = os.time()
   displayTime.text = levelTime - (now - startTime)
+  --change the colour of the timer based on how much time is remaining
+  if ( levelTime - (now - startTime)==levelTime/2) then
+  	transition.to(displayTime,{time=100,size=30})
+  	displayTime:setTextColor( 214,223, 32 )
+  end
+  if ( levelTime - (now - startTime)==5) then
+  	transition.to(displayTime,{time=100,size=40})
+  	displayTime:setTextColor( 239,89, 40 )
+  end
+  --gamve over when there is no remaining time
   if ( levelTime - (now - startTime)==0) then
 	gameOver()
   end
@@ -75,13 +85,14 @@ function scene:createScene( event )
 	physics.start(); 
 	physics.setGravity( 0,0 )
 	
-	displayTime = display.newText(levelTime, display.contentWidth-30, 5, "Aka-AcidGR-Atomic", 45)
-	displayTime.alpha=0
-	displayTime:setTextColor( 188,33, 33 )
+	displayTime = display.newText(levelTime, display.contentWidth-40, 15)
+	displayTime.alpha = 0
+	displayTime.size = 20
+	displayTime:setTextColor( 0,173, 239 )
 
-	background=display.newImage("bcklevel1.png")
-	background.x=display.contentCenterX
-	background.y=display.contentCenterY
+	background = display.newImageRect( "background.png", display.contentWidth, display.contentHeight )
+	background:setReferencePoint( display.TopLeftReferencePoint )
+	background.x, background.y = 0, 0
 		
 	ball=display.newImage("ball1.png")
 	ball.x=30

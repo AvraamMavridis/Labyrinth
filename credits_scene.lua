@@ -31,10 +31,10 @@ function scene:createScene( event )
 
 
 	
-	local developerText=display.newText("Avraam Mavridis \navraammamauridis@gmail.com", 0, 0)
+	local developerText=display.newText("Avraam Mavridis \navraammamauridis@gmail.com", 20, 30)
 	developerText.size = 20
 	developerText:setReferencePoint( display.CenterReferencePoint )
-	developerText:setTextColor (214, 222, 33)
+	developerText:setTextColor (241, 89, 40)
 	developerText.x = display.contentWidth * 0.5
 	developerText.y = 150
 	

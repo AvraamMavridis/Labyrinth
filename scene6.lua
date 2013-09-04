@@ -40,7 +40,7 @@ function nextScene()
 	audio.play( exitSound  )
 	physics.stop()
     storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*60
-    storyboard.gotoScene( "loadscene7")
+    storyboard.gotoScene( "menu")
 end
 
 local function onCollision( event )
@@ -72,6 +72,11 @@ local function changeGravity()
 	if(ball.y<display.contentCenterY)then
 	physics.setGravity( 0,0)
 	end
+end
+
+local function mazeRotate()
+	maze:rotate(0.1)
+ 	maze2:rotate(0.1)
 end
 
 
@@ -131,6 +136,7 @@ function scene:createScene( event )
 	ball:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
 	Runtime:addEventListener("enterFrame", changeGravity)
+	Runtime:addEventListener( "enterFrame", mazeRotate)
 	Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
 	Runtime:addEventListener( "collision", onCollision )
 	
@@ -172,6 +178,7 @@ function scene:exitScene( event )
 
 	Runtime:removeEventListener( "enterFrame", checkTime )
 	Runtime:removeEventListener( "enterFrame", changeGravity )
+	Runtime:removeEventListener( "enterFrame", mazeRotate )
     Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
     Runtime:removeEventListener( "collision", onCollision )
 	

@@ -57,9 +57,20 @@ local function gameOver()
 	storyboard.gotoScene( "gameover", "fade", 300)
 end
 
+--function to display the time
 local function checkTime(event)
   now = os.time()
   displayTime.text = levelTime - (now - startTime)
+  --change the colour of the timer based on how much time is remaining
+  if ( levelTime - (now - startTime)==levelTime/2) then
+  	transition.to(displayTime,{time=100,size=30})
+  	displayTime:setTextColor( 214,223, 32 )
+  end
+  if ( levelTime - (now - startTime)==5) then
+  	transition.to(displayTime,{time=100,size=40})
+  	displayTime:setTextColor( 239,89, 40 )
+  end
+  --gamve over when there is no remaining time
   if ( levelTime - (now - startTime)==0) then
 	gameOver()
   end
@@ -75,9 +86,10 @@ function scene:createScene( event )
 	physics.start(); 
 	physics.setGravity( 0,0 )
 	
-	displayTime = display.newText(levelTime, display.contentWidth-30, 5)
-	displayTime.alpha=0
-	displayTime:setTextColor( 188,33, 33 )
+	displayTime = display.newText(levelTime, display.contentWidth-40, 15)
+	displayTime.alpha = 0
+	displayTime.size = 20
+	displayTime:setTextColor( 0,173, 239 )
 
 	background = display.newImageRect( "background.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
@@ -125,7 +137,7 @@ function scene:createScene( event )
 	borderdown.x = display.contentCenterX
 	borderdown.y = display.contentHeight - 1 
 
-	
+
 
 	
 	
@@ -136,6 +148,7 @@ function scene:createScene( event )
     physics.addBody (borderright, "static",{ friction=0.5, bounce=0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
+	--ball touch event only for testing
 	ball:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
 	Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
@@ -148,6 +161,8 @@ function scene:createScene( event )
 	screenGroup:insert( maze2 )
 	screenGroup:insert( borderleft )
 	screenGroup:insert( borderright )
+	screenGroup:insert( borderdown)
+	screenGroup:insert( borderup)
 	screenGroup:insert( exitscn )
 	
 
