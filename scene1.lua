@@ -137,15 +137,14 @@ function scene:createScene( event )
 	borderdown.x = display.contentCenterX
 	borderdown.y = display.contentHeight - 1 
 
-
-
-	
 	
 	physics.addBody (ball, "dynamic",physicsData:get("ball"))
 	physics.addBody (maze, "static",physicsData:get("mazelevel1_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel1_2"))
     physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
     physics.addBody (borderright, "static",{ friction=0.5, bounce=0 })
+    physics.addBody (borderup, "static",{ friction=0.5, bounce=0 })
+    physics.addBody (borderdown, "static",{ friction=0.5, bounce=0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
 	--ball touch event only for testing
