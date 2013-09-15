@@ -6,8 +6,14 @@
 
 local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
+
+--keep the score
 storyboard.state = {}
 storyboard.state.score = 0
+
+--keep the level
+storyboard.state2 = {}
+storyboard.state2.level = 0
 
 -- include Corona's "widget" library
 local widget = require "widget"

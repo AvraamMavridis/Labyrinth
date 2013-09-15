@@ -39,6 +39,11 @@ function scene:createScene( event )
 	db:exec[[CREATE TABLE highscoretable (id INTEGER PRIMARY KEY, content INTEGER);]]
 	local highscorefill =[[INSERT INTO highscoretable VALUES (NULL, ']]..storyboard.state.score..[['); ]]
 	db:exec( highscorefill )
+
+	--insert the highest level of the current game
+	db:exec[[CREATE TABLE levelstable (id INTEGER PRIMARY KEY, content INTEGER);]]
+	local levelfill =[[INSERT INTO levelstable VALUES (NULL, ']]..storyboard.state2.level..[['); ]]
+	db:exec( levelfill )
 	
 	for row in db:nrows("SELECT * FROM highscoretable") do
 	 print(row.id .. " " .. row.content)

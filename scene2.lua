@@ -10,6 +10,7 @@ local scene = storyboard.newScene()
 
 
 system.setIdleTimer( false )
+system.setAccelerometerInterval( 100 )
 
 local physics = require "physics"
 local physicsData = (require "myphysics").physicsData(1.0)
@@ -18,19 +19,17 @@ local physicsData = (require "myphysics").physicsData(1.0)
 ---------------------------------------------------------------------------------
 local displayTime,background,ball,maze,maze2,borders,exitscn
 local startTime=0
-local levelTime = 20
+local levelTime = 40
 local score=0
 local now=0
 local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 
 
-local function onGyroscopeDataReceived( event )
-    local deltaRadiansX = event.xRotation * event.deltaTime
-    local deltaDegreesX = deltaRadiansX * (180 / math.pi)
-    local deltaRadiansY = event.yRotation * event.deltaTime
-    local deltaDegreesY = deltaRadiansY * (180 / math.pi)
-    ball:applyForce( deltaDegreesX*2, -deltaDegreesY*2, ball.x, ball.y )
+
+
+function onTilt( event )
+	physics.setGravity( (-9.8*event.yGravity), (-9.8*event.xGravity) ) --Το σωστό
 end
 
 
@@ -40,6 +39,7 @@ function nextScene()
 	audio.play( exitSound  )
 	physics.stop()
     storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*20
+    storyboard.state2.level = 3
     storyboard.gotoScene( "loadscene3")
 end
 
@@ -83,14 +83,14 @@ end
 function scene:createScene( event )
 	local screenGroup = self.view
 	physics.start(); 
-	physics.setGravity( 0,0 )
+	physics.setGravity( 0,0)
 	
 	displayTime = display.newText(levelTime, display.contentWidth-40, 15)
 	displayTime.alpha = 0
 	displayTime.size = 20
 	displayTime:setTextColor( 0,173, 239 )
 
-	background = display.newImageRect( "background.png", display.contentWidth, display.contentHeight )
+	background = display.newImageRect( "background2.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
 		
@@ -131,6 +131,7 @@ function scene:createScene( event )
 	exitscn.name="exitscn"
 	
 	physics.addBody (ball, "dynamic",physicsData:get("ball"))
+	ball.isSleepingAllowed = false
 	physics.addBody (maze, "static",physicsData:get("mazelevel2_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel2_2"))
 	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
@@ -141,7 +142,8 @@ function scene:createScene( event )
 	
 	ball:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
-	Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
+	--Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
+	Runtime:addEventListener( "accelerometer", onTilt )
 	Runtime:addEventListener( "collision", onCollision )
 	
 	screenGroup:insert( background )
@@ -177,7 +179,7 @@ function scene:exitScene( event )
     audio.stop()
 
 	Runtime:removeEventListener( "enterFrame", checkTime )
-    Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
+    Runtime:removeEventListener( "accelerometer", onTilt )
     Runtime:removeEventListener( "collision", onCollision )
 	
 end

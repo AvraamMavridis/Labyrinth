@@ -10,6 +10,7 @@ local scene = storyboard.newScene()
 
 
 system.setIdleTimer( false )
+system.setAccelerometerInterval( 100 )
 
 local physics = require "physics"
 local physicsData = (require "myphysics").physicsData(1.0)
@@ -18,20 +19,37 @@ local physicsData = (require "myphysics").physicsData(1.0)
 ---------------------------------------------------------------------------------
 local displayTime,background,ball,maze,maze2,borders,exitscn
 local startTime=0
-local levelTime = 20
+local levelTime = 40
 
 local now
 local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 
 
-local function onGyroscopeDataReceived( event )
-    local deltaRadiansX = event.xRotation * event.deltaTime
-    local deltaDegreesX = deltaRadiansX * (180 / math.pi)
-    local deltaRadiansY = event.yRotation * event.deltaTime
-    local deltaDegreesY = deltaRadiansY * (180 / math.pi)
-    ball:applyForce( deltaDegreesX*2, -deltaDegreesY*2, ball.x, ball.y )
+function onTilt( event )
+	--deltaDegreesXText.text = "xG: " .. (event.xGravity)
+	--deltaDegreesYText.text =  "yG: " .. (event.yGravity)
+
+--	if(ball.isAwake==true)then
+--		fallAsleepText.text = "True "
+--	elseif(ball.isAwake==false)then
+--		fallAsleepText.text = "False "
+--	end
+	
+	--physics.setGravity( (9.8*event.xGravity), (-9.8*event.yGravity) ) -- Λάθος άξονας
+	--physics.setGravity( (9.8*event.yGravity), (-9.8*event.xGravity) ) -- Σωστός άξονας λάθος κατεύθυνση
+	--physics.setGravity( (9.8*event.yGravity), (9.8*event.xGravity) ) -- Σωστός άξονας λάθος κατευθύνσεις και στους 2 άξονες
+	physics.setGravity( (-9.8*event.yGravity), (-9.8*event.xGravity) ) --Το σωστό
+     --ball:applyForce( ((-9.8*event.yGravity)*2), ((-9.8*event.xGravity)*2), ball.x, ball.y )
 end
+
+-- local function onGyroscopeDataReceived( event )
+--     local deltaRadiansX = event.xRotation * event.deltaTime
+--     local deltaDegreesX = deltaRadiansX * (180 / math.pi)
+--     local deltaRadiansY = event.yRotation * event.deltaTime
+--     local deltaDegreesY = deltaRadiansY * (180 / math.pi)
+--     ball:applyForce( deltaDegreesX*2, -deltaDegreesY*2, ball.x, ball.y )
+-- end
 
 
 
@@ -40,6 +58,7 @@ function nextScene()
 	audio.play( exitSound  )
 	physics.stop()
     storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*10
+    storyboard.state2.level = 2
     storyboard.gotoScene( "loadscene2")
 end
 
@@ -85,16 +104,16 @@ function scene:createScene( event )
 	local screenGroup = self.view
 	physics.start(); 
 	physics.setGravity( 0,0 )
-	
+
 	displayTime = display.newText(levelTime, display.contentWidth-40, 15)
 	displayTime.alpha = 0
 	displayTime.size = 20
 	displayTime:setTextColor( 0,173, 239 )
 
-	background = display.newImageRect( "background.png", display.contentWidth, display.contentHeight )
+	background = display.newImageRect( "background2.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
-		
+
 	ball=display.newImage("ball1.png")
 	ball.x=30
 	ball.y=display.contentCenterY
@@ -104,18 +123,18 @@ function scene:createScene( event )
 	maze.x=display.contentCenterX
 	maze.y=display.contentCenterY
 	maze.name="maze"
-	
+
 	maze2=display.newImage( "maze1.png" )
 	maze2.x=display.contentCenterX
 	maze2.y=display.contentCenterY
 	maze2.name="maze2"
-	
+
 	--borders=display.newImage( "borders.png" , display.contentWidth, display.contentHeight )
 	--borders:setReferencePoint( display.TopLeftReferencePoint )
 	--borders.x, borders.y = 0, 0
 	--borders.name="borders"
 	--borders.alpha=0.7
-	
+
 	exitscn = display.newImage("exit.png")
 	exitscn.x = display.contentWidth-30
 	exitscn.y = display.contentCenterY
@@ -137,8 +156,9 @@ function scene:createScene( event )
 	borderdown.x = display.contentCenterX
 	borderdown.y = display.contentHeight - 1 
 
-	
+
 	physics.addBody (ball, "dynamic",physicsData:get("ball"))
+	ball.isSleepingAllowed = false
 	physics.addBody (maze, "static",physicsData:get("mazelevel1_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel1_2"))
     physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
@@ -146,13 +166,14 @@ function scene:createScene( event )
     physics.addBody (borderup, "static",{ friction=0.5, bounce=0 })
     physics.addBody (borderdown, "static",{ friction=0.5, bounce=0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
-	
+
 	--ball touch event only for testing
 	ball:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
-	Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
+	Runtime:addEventListener( "accelerometer", onTilt )
+	-- Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
 	Runtime:addEventListener( "collision", onCollision )
-	
+
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
 	screenGroup:insert( ball )
@@ -163,7 +184,7 @@ function scene:createScene( event )
 	screenGroup:insert( borderdown)
 	screenGroup:insert( borderup)
 	screenGroup:insert( exitscn )
-	
+
 
 	print( "\n1: createScene event")
 end
@@ -179,22 +200,23 @@ function scene:enterScene( event )
     audio.play(backgroundMusicSound)
 	startTime = os.time()
 	transition.to ( displayTime, {alpha=1,time=500} )
-	
-	
+
+
 end
 
 
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
-	
+
 	print( "1: exitScene event" )
 	physics.stop( )
     audio.stop()
 
 	Runtime:removeEventListener( "enterFrame", checkTime )
-    Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
+    Runtime:removeEventListener( "accelerometer", onTilt )
+    -- Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
     Runtime:removeEventListener( "collision", onCollision )
-	
+
 end
 
 

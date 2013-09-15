@@ -8506,9 +8506,15 @@ function M.physicsData(scale)
                     
                     
                     {
-                    pe_fixture_id = "", density = 2, friction = 1, bounce = 0, 
+                    pe_fixture_id = "", density = 1, friction = 0, bounce = 0, 
                     filter = { categoryBits = 1, maskBits = 65535, groupIndex = 0 },
-                    shape = {   -7, -3  ,  2, -7  ,  6, -3  ,  6, 3  ,  -3, 7  }
+                    shape = {   8.5, -5  ,  8.5, -4  ,  -5, -9.5  ,  4, -9.5  }
+                    }
+                     ,
+                    {
+                    pe_fixture_id = "", density = 1, friction = 0, bounce = 0, 
+                    filter = { categoryBits = 1, maskBits = 65535, groupIndex = 0 },
+                    shape = {   -9.5, 5  ,  -9.5, -5  ,  -5, -9.5  ,  8.5, -4  ,  9.5, -3  ,  9.5, 4  ,  3, 10.5  ,  -4, 10.5  }
                     }
                     
                     
@@ -8544,6 +8550,34 @@ function M.physicsData(scale)
                     shape = {   231, 156  ,  236, 159  ,  -240, 160  ,  -236, 156  }
                     }
                     
+                    
+                    
+        }
+
+        , 
+         
+        ["blackhole"] = {
+                    
+                    
+                    
+                    {
+                    pe_fixture_id = "", density = 2, friction = 0, bounce = 0, 
+                    filter = { categoryBits = 1, maskBits = 65535, groupIndex = 0 },
+                    radius = 6.000
+                    }
+                    
+                    
+        }
+        ,
+        ["earthphysics"] = {
+                    
+                    
+                    
+                    {
+                    pe_fixture_id = "", density = 5.9736, friction = 0, bounce = 0, 
+                    filter = { categoryBits = 1, maskBits = 65535, groupIndex = 0 },
+                    radius = 11.000
+                    }
                     
                     
         }

@@ -25,14 +25,17 @@ local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 
 
-local function onGyroscopeDataReceived( event )
-    local deltaRadiansX = event.xRotation * event.deltaTime
-    local deltaDegreesX = deltaRadiansX * (180 / math.pi)
-    local deltaRadiansY = event.yRotation * event.deltaTime
-    local deltaDegreesY = deltaRadiansY * (180 / math.pi)
-    ball:applyForce( -deltaDegreesX*6, -deltaDegreesY*6, ball.x, ball.y )
-end
+-- local function onGyroscopeDataReceived( event )
+--     local deltaRadiansX = event.xRotation * event.deltaTime
+--     local deltaDegreesX = deltaRadiansX * (180 / math.pi)
+--     local deltaRadiansY = event.yRotation * event.deltaTime
+--     local deltaDegreesY = deltaRadiansY * (180 / math.pi)
+--     ball:applyForce( -deltaDegreesX*6, -deltaDegreesY*6, ball.x, ball.y )
+-- end
 
+function onTilt( event )
+	physics.setGravity( (-9.8*event.yGravity), (-9.8*event.xGravity) ) --Το σωστό
+end
 
 
 function nextScene()
@@ -123,8 +126,9 @@ function scene:createScene( event )
 	ball:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
 	Runtime:addEventListener( "enterFrame", mazeRotate)
-	Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
+	-- Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
 	Runtime:addEventListener( "collision", onCollision )
+	Runtime:addEventListener( "accelerometer", onTilt )
 	
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
@@ -163,8 +167,9 @@ function scene:exitScene( event )
 
 	Runtime:removeEventListener( "enterFrame", checkTime )
 	Runtime:removeEventListener( "enterFrame", mazeRotate )
-    Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
+    -- Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
     Runtime:removeEventListener( "collision", onCollision )
+    Runtime:removeEventListener( "accelerometer", onTilt )
 	
 end
 

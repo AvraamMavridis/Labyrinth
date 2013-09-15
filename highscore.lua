@@ -18,6 +18,8 @@ local widget = require "widget"
 local gameoverSound = audio.loadStream ( "gameover.mp3" )
 local buttonClickSound = audio.loadSound("button_click.wav")
 
+
+
 local function onBackBtnRelease()
 	print(10)
 	-- go to level1.lua scene
@@ -28,25 +30,39 @@ local function onBackBtnRelease()
 	return true	-- indicates successful touch
 end
 
-local backBtn
+
 
 function scene:createScene( event )
 	local group = self.view
 	
-	
+	local backBtn,background,leveltext,score
 
 		-- display a background image
-	local background = display.newImageRect( "background.png", display.contentWidth, display.contentHeight )
+	background = display.newImageRect( "background.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
-	local score
+
+	leveltext = display.newText(" ", display.contentCenterX-100, display.contentCenterY-20)
+	score = display.newText(" ", display.contentCenterX-100, display.contentCenterY-50)
 	
-	for row in db:nrows("SELECT * FROM highscoretable WHERE content=(SELECT max(content) FROM highscoretable)") do
-	 print(row.id .. " " .. row.content)
-	 score=display.newText("Highscore: " .. row.content, display.contentCenterX-100, display.contentCenterY-50)
-	 score.size=30
-	 score:setTextColor ( 0, 173, 240 )
+	for row in db:nrows("SELECT * FROM levelstable WHERE content=(SELECT max(content) FROM levelstable)") do
+	 leveltext.text = "Finished Levels: " .. row.content
+	 leveltext.size=30
+	 leveltext:setTextColor ( 0, 173, 240 ) 
 	end
+
+    
+	for row in db:nrows("SELECT * FROM highscoretable WHERE content=(SELECT max(content) FROM highscoretable)") do
+	 score.text = "Highscore: " .. row.content
+	 score.size=30
+	 score:setTextColor ( 0, 173, 240 ) 
+	end
+
+	-- for row in db:nrows("SELECT * FROM levelstable WHERE content=(SELECT max(content) FROM levelstable)") do
+	--  levels=display.newText("Level: " .. row.content, display.contentCenterX-100, display.contentCenterY-30)
+	--  levels.size=30
+	--  levels:setTextColor ( 0, 173, 240 )
+	-- end
 	
 
 	
@@ -59,15 +75,17 @@ function scene:createScene( event )
 		width=154, height=40,
 		onRelease = onBackBtnRelease	-- event listener function
 	}
+
 	backBtn:setReferencePoint( display.CenterReferencePoint )
 	backBtn.x = display.contentWidth*0.5
 	backBtn.y = display.contentHeight - 75
 	
-	group:insert( background )
-	group:insert( backBtn )
-	group:insert( score )
-
 	
+	
+    group:insert( background )
+    group:insert( leveltext )
+    group:insert( score )
+    group:insert( backBtn )
 
 end
 
