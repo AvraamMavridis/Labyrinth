@@ -136,7 +136,7 @@ function scene:createScene( event )
 			{
     		name="blackholeflashing",
 		    start=1,
-		    count=6,
+		    count=5,
 		    time=500,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
 		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
 		    loopDirection = "bounce"    -- Optional. Values include: "forward","bounce"

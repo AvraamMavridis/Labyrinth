@@ -93,11 +93,33 @@ function scene:createScene( event )
 	background = display.newImageRect( "background2.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
+
+	local planetoptions = {
+   		width = 24,
+   		height = 24,
+   		numFrames = 5
+		}
 		
-	ball=display.newImage("ball1.png")
-	ball.x=30
-	ball.y=display.contentCenterY
-	ball.name="ball"
+	local planetSheet = graphics.newImageSheet( "earthsprite.png", planetoptions )
+
+	local planetSequenceData =
+			{
+    		name="planetsequence",
+		    start=1,
+		    count=5,
+		    time=500,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
+		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
+		    loopDirection = "bounce"    -- Optional. Values include: "forward","bounce"
+			}
+
+	local planetSprite = display.newSprite( planetSheet, planetSequenceData )
+	planetSprite.x = 75
+	planetSprite.y = 15
+	planetSprite.x = 30
+	planetSprite.y = display.contentCenterY
+	planetSprite.name = "planet"
+	planetSprite:play()
+
 
 	maze=display.newImage( "maze2.png" )
 	maze.x=display.contentCenterX
@@ -130,8 +152,8 @@ function scene:createScene( event )
 	exitscn.y=display.contentCenterY
 	exitscn.name="exitscn"
 	
-	physics.addBody (ball, "dynamic",physicsData:get("ball"))
-	ball.isSleepingAllowed = false
+	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
+	planetSprite.isSleepingAllowed = false
 	physics.addBody (maze, "static",physicsData:get("mazelevel2_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel2_2"))
 	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
@@ -140,7 +162,7 @@ function scene:createScene( event )
     physics.addBody (borderdown, "static",{ friction=0.5, bounce=0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
-	ball:addEventListener ( "touch", nextScene )
+	planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
 	--Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
 	Runtime:addEventListener( "accelerometer", onTilt )
@@ -148,7 +170,7 @@ function scene:createScene( event )
 	
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
-	screenGroup:insert( ball )
+	screenGroup:insert( planetSprite )
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
 	screenGroup:insert( borderleft )

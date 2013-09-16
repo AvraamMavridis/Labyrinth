@@ -69,6 +69,12 @@ local function onCollision( event )
         end 
 	end
 
+	if ( event.phase == "ended" ) then
+       if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
+       		timer.performWithDelay ( 200, nextScene )
+        end 
+	end
+
 end
  
 local function gameOver()
@@ -114,10 +120,32 @@ function scene:createScene( event )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
 
-	ball=display.newImage("ball1.png")
-	ball.x=30
-	ball.y=display.contentCenterY
-	ball.name="ball"
+	local planetoptions = {
+   		width = 24,
+   		height = 24,
+   		numFrames = 5
+		}
+
+	local planetSheet = graphics.newImageSheet( "earthsprite.png", planetoptions )
+
+	local planetSequenceData =
+			{
+    		name="planetsequence",
+		    start=1,
+		    count=5,
+		    time=500,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
+		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
+		    loopDirection = "bounce"    -- Optional. Values include: "forward","bounce"
+			}
+
+	local planetSprite = display.newSprite( planetSheet, planetSequenceData )
+	planetSprite.x = 75
+	planetSprite.y = 15
+	planetSprite.x = 30
+	planetSprite.y = display.contentCenterY
+	planetSprite.name = "planet"
+	planetSprite:play()
+
 
 	maze=display.newImage( "maze1.png" )
 	maze.x=display.contentCenterX
@@ -128,12 +156,6 @@ function scene:createScene( event )
 	maze2.x=display.contentCenterX
 	maze2.y=display.contentCenterY
 	maze2.name="maze2"
-
-	--borders=display.newImage( "borders.png" , display.contentWidth, display.contentHeight )
-	--borders:setReferencePoint( display.TopLeftReferencePoint )
-	--borders.x, borders.y = 0, 0
-	--borders.name="borders"
-	--borders.alpha=0.7
 
 	exitscn = display.newImage("exit.png")
 	exitscn.x = display.contentWidth-30
@@ -157,8 +179,8 @@ function scene:createScene( event )
 	borderdown.y = display.contentHeight - 1 
 
 
-	physics.addBody (ball, "dynamic",physicsData:get("ball"))
-	ball.isSleepingAllowed = false
+	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
+	planetSprite.isSleepingAllowed = false
 	physics.addBody (maze, "static",physicsData:get("mazelevel1_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel1_2"))
     physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
@@ -168,7 +190,7 @@ function scene:createScene( event )
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 
 	--ball touch event only for testing
-	ball:addEventListener ( "touch", nextScene )
+	planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
 	Runtime:addEventListener( "accelerometer", onTilt )
 	-- Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
@@ -176,7 +198,7 @@ function scene:createScene( event )
 
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
-	screenGroup:insert( ball )
+	screenGroup:insert( planetSprite )
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
 	screenGroup:insert( borderleft )
