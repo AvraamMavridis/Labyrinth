@@ -195,7 +195,7 @@ function scene:createScene( event )
 	local blackholeSequenceData =
 			{
     		name="blackholeflashing",
-		    start=1,
+		    start=1, --Starting loop
 		    count=4,
 		    time=800,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
 		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
@@ -213,6 +213,7 @@ function scene:createScene( event )
 
 	
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
+	planetSprite.isSleepingAllowed = false
 	physics.addBody (maze, "static",physicsData:get("mazelevel3_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel3_2"))
 	physics.addBody (blackholeSprite, "static",physicsData:get("blackhole"))
