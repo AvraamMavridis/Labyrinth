@@ -41,7 +41,10 @@ function onTilt( event )
 end
 
 
-
+local function gameOver()
+	audio.stop()
+	storyboard.gotoScene( "gameover", "fade", 300)
+end
 
 
 function nextScene()
@@ -54,8 +57,11 @@ end
 
 local function onCollision( event )
 	if ( event.phase == "ended" ) then
-       if(event.object1.name =="exitscn" or event.object2.name =="exitscn") then
+       	if(event.object1.name =="exitscn" or event.object2.name =="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
+        end 
+        if(event.object1.name =="blackholeSprite" or event.object2.name =="blackholeSprite") then
+       		gameOver()
         end 
 	end
 
@@ -77,10 +83,7 @@ end
 
 
  
-local function gameOver()
-	audio.stop()
-	storyboard.gotoScene( "gameover", "fade", 300)
-end
+
 
 local function checkTime(event)
   now = os.time()
@@ -207,7 +210,7 @@ function scene:createScene( event )
 	blackholeSprite.y = 15
 	blackholeSprite.x = display.contentCenterX
 	blackholeSprite.y = display.contentCenterY
-	blackholeSprite.name = "blackhole"
+	blackholeSprite.name = "blackholeSprite"
 	blackholeSprite:play()
 
 
@@ -217,6 +220,7 @@ function scene:createScene( event )
 	physics.addBody (maze, "static",physicsData:get("mazelevel3_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel3_2"))
 	physics.addBody (blackholeSprite, "static",physicsData:get("blackhole"))
+	blackholeSprite.isSleepingAllowed = false
 	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
     physics.addBody (borderright, "static",{ friction=0.5, bounce=0 })
     physics.addBody (borderup, "static",{ friction=0.5, bounce=0 })
