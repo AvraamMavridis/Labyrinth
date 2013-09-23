@@ -44,7 +44,7 @@ function nextScene()
 end
 
 local function onCollision( event )
-	if ( event.phase == "ended" ) then
+	if ( event.phase == "began" ) then
        if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 

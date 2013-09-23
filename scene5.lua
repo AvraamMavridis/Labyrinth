@@ -18,21 +18,25 @@ local physicsData = (require "myphysics").physicsData(1.0)
 ---------------------------------------------------------------------------------
 local displayTime,background,ball,maze,maze2,borders,exitscn
 local startTime=0
-local levelTime = 30
+local levelTime = 60
 local score=0
 local now
 local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
+local blackholeSprite,blackholeSprite2
 
 
-local function onGyroscopeDataReceived( event )
-    local deltaRadiansX = event.xRotation * event.deltaTime
-    local deltaDegreesX = deltaRadiansX * (180 / math.pi)
-    local deltaRadiansY = event.yRotation * event.deltaTime
-    local deltaDegreesY = deltaRadiansY * (180 / math.pi)
-    ball:applyForce( -deltaDegreesX*6, -deltaDegreesY*6, ball.x, ball.y )
+-- local function onGyroscopeDataReceived( event )
+--     local deltaRadiansX = event.xRotation * event.deltaTime
+--     local deltaDegreesX = deltaRadiansX * (180 / math.pi)
+--     local deltaRadiansY = event.yRotation * event.deltaTime
+--     local deltaDegreesY = deltaRadiansY * (180 / math.pi)
+--     ball:applyForce( -deltaDegreesX*6, -deltaDegreesY*6, ball.x, ball.y )
+-- end
+
+function onTilt( event )
+	physics.setGravity( (-9.8*event.yGravity), (-9.8*event.xGravity) ) --Το σωστό
 end
-
 
 
 function nextScene()
@@ -40,13 +44,17 @@ function nextScene()
 	audio.play( exitSound  )
 	physics.stop()
     storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*50
+    storyboard.state2.level = 6
     storyboard.gotoScene( "loadscene6")
 end
 
 local function onCollision( event )
-	if ( event.phase == "ended" ) then
+	if ( event.phase == "began" ) then
        if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
+        end 
+        if(event.object1.name =="blackholeSprite" or event.object2.name =="blackholeSprite") then
+       		gameOver()
         end 
 	end
 
@@ -66,11 +74,14 @@ local function checkTime(event)
 end
 
 local function mazeRotate()
-	maze:rotate(-0.2)
- 	maze2:rotate(-0.2)
+	maze:rotate(-0.1)
+ 	maze2:rotate(-0.1)
 end
 
-
+local function blackholeRotate()
+	blackholeSprite:rotate(0.8)
+	blackholeSprite2:rotate(-0.8)
+end
 
 
 
@@ -80,58 +91,143 @@ function scene:createScene( event )
 	physics.start(); 
 	physics.setGravity( 0,0 )
 	
-	displayTime = display.newText(levelTime, display.contentWidth-30, 5, "Aka-AcidGR-Atomic", 45)
-	displayTime.alpha=0
-	displayTime:setTextColor( 188,33, 33 )
+	displayTime = display.newText(levelTime, display.contentWidth-40, 15)
+	displayTime.alpha = 0
+	displayTime.size = 20
+	displayTime:setTextColor( 0,173, 239 )
 
-	background=display.newImage("bcklevel1.png")
-	background.x=display.contentCenterX
-	background.y=display.contentCenterY
+	background = display.newImageRect( "background2.png", display.contentWidth, display.contentHeight )
+	background:setReferencePoint( display.TopLeftReferencePoint )
+	background.x, background.y = 0, 0
 		
-	ball=display.newImage("ball1.png")
-	ball.x=30
-	ball.y=display.contentCenterY
-	ball.name="ball"
+	local planetoptions = {
+   		width = 24,
+   		height = 24,
+   		numFrames = 5
+		}
 
-	maze=display.newImage( "maze4.png" )
+	local planetSheet = graphics.newImageSheet( "earthsprite.png", planetoptions )
+
+	local planetSequenceData =
+			{
+    		name="blackholeflashing",
+		    start=1,
+		    count=5,
+		    time=500,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
+		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
+		    loopDirection = "bounce"    -- Optional. Values include: "forward","bounce"
+			}
+
+	local planetSprite = display.newSprite( planetSheet, planetSequenceData )
+	planetSprite.x = 75
+	planetSprite.y = 15
+	planetSprite.x = 30
+	planetSprite.y = display.contentCenterY
+	planetSprite.name = "planet"
+	planetSprite:play()
+
+	maze=display.newImage( "maze5.png" )
 	maze.x=display.contentCenterX
 	maze.y=display.contentCenterY
 	maze.name="maze"
 	
-	maze2=display.newImage( "maze4.png" )
+	maze2=display.newImage( "maze5.png" )
 	maze2.x=display.contentCenterX
 	maze2.y=display.contentCenterY
 	maze2.name="maze2"
 	
-	borders=display.newImage( "borders.png" )
-	borders.x=display.contentCenterX
-	borders.y=display.contentCenterY
-	borders.name="borders"
-	borders.alpha=0.1
+	borderleft = display.newImage( "borderleftright.png" )
+	borderleft.x = 1
+	borderleft.y = display.contentCenterY
+
+	borderright = display.newImage( "borderleftright.png" )
+	borderright.x = display.contentWidth-1
+	borderright.y = display.contentCenterY
+
+	borderup = display.newImage( "borderupdown.png")
+	borderup.x = display.contentCenterX
+	borderup.y = 1
+
+	borderdown = display.newImage( "borderupdown.png")
+	borderdown.x = display.contentCenterX
+	borderdown.y = display.contentHeight - 1 
 	
 	exitscn=display.newImage("exit.png")
-	exitscn.x=display.contentWidth-30
-	exitscn.y=display.contentCenterY
+	exitscn.x=display.contentWidth-70
+	exitscn.y=30
 	exitscn.name="exitscn"
+
+	local blackholeoptions = {
+   		width = 32,
+   		height = 24,
+   		numFrames = 4
+		}
+
+	local blackholeSheet = graphics.newImageSheet( "blackholesheet.png", blackholeoptions )
+
+	local blackholeSequenceData =
+			{
+    		name="blackholeflashing",
+		    start=1, --Starting loop
+		    count=4,
+		    time=800,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
+		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
+		    loopDirection = "forward"    -- Optional. Values include: "forward","bounce"
+			}
+
+	blackholeSprite = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite.x = display.contentCenterX+40
+	blackholeSprite.y = display.contentCenterY
+	blackholeSprite.name = "blackholeSprite"
+	blackholeSprite:play()
+
+	blackholeSprite2 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite2.x = display.contentCenterX-30
+	blackholeSprite2.y = 30 --display.contentCenterY-80
+	blackholeSprite2.name = "blackholeSprite"
+	blackholeSprite2:play()
+
+	blackholeSprite3 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite3.x = display.contentCenterX-90
+	blackholeSprite3.y = 160 --display.contentCenterY-80
+	blackholeSprite3.name = "blackholeSprite"
+	blackholeSprite3:play()
+
+
 	
-	physics.addBody (ball, "dynamic",physicsData:get("ball"))
-	physics.addBody (maze, "static",physicsData:get("mazelevel4_1"))
-	physics.addBody (maze2, "static",physicsData:get("mazelevel4_2"))
-	physics.addBody (borders, "static",physicsData:get("borders"))
+	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
+	physics.addBody (maze, "static",physicsData:get("mazelevel5_1"))
+	physics.addBody (maze2, "static",physicsData:get("mazelevel5_2"))
+	physics.addBody (blackholeSprite, "static",physicsData:get("blackhole"))
+	physics.addBody (blackholeSprite2, "static",physicsData:get("blackhole"))
+	blackholeSprite.isSleepingAllowed = false
+	blackholeSprite2.isSleepingAllowed = false
+	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
+    physics.addBody (borderright, "static",{ friction=0.5, bounce=0 })
+    physics.addBody (borderup, "static",{ friction=0.5, bounce=0 })
+    physics.addBody (borderdown, "static",{ friction=0.5, bounce=0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
-	ball:addEventListener ( "touch", nextScene )
+	planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
 	Runtime:addEventListener( "enterFrame", mazeRotate)
-	Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
+	-- Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
 	Runtime:addEventListener( "collision", onCollision )
+	Runtime:addEventListener( "accelerometer", onTilt )
+	Runtime:addEventListener( "enterFrame", blackholeRotate)
 	
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
-	screenGroup:insert( ball )
+	screenGroup:insert( planetSprite )
+	screenGroup:insert( blackholeSprite )
+	screenGroup:insert( blackholeSprite2 )
+	screenGroup:insert( blackholeSprite3)
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
-	screenGroup:insert( borders )
+	screenGroup:insert( borderleft )
+	screenGroup:insert( borderright )
+	screenGroup:insert( borderdown)
+	screenGroup:insert( borderup)
 	screenGroup:insert( exitscn )
 	
 
@@ -156,18 +252,25 @@ end
 
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
+	
+	print( "1: exitScene event" )
 	physics.stop( )
     audio.stop()
+
 	Runtime:removeEventListener( "enterFrame", checkTime )
 	Runtime:removeEventListener( "enterFrame", mazeRotate )
-    Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
+	Runtime:removeEventListener( "enterFrame", blackholeRotate)
+    -- Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
     Runtime:removeEventListener( "collision", onCollision )
+    Runtime:removeEventListener( "accelerometer", onTilt )
 	
 end
 
 
 -- Called prior to the removal of scene's "view" (display group)
 function scene:destroyScene( event )
+
+	print( "((destroying scene 1's view))" )
 	package.loaded[physics] = nil
 	physics = nil
 end

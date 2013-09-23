@@ -57,7 +57,7 @@ function scene:createScene( event )
 		fontSize=25,
 		defaultFile="button.png",
 		overFile="button-over.png",
-		width=154, height=40,
+		width=154, height=60,
 		onRelease = onPlayBtnRelease	-- event listener function
 	}
 	playBtn:setReferencePoint( display.CenterReferencePoint )

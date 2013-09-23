@@ -17,7 +17,7 @@ local physicsData = (require "myphysics").physicsData(1.0)
 ---------------------------------------------------------------------------------
 -- BEGINNING OF  IMPLEMENTATION
 ---------------------------------------------------------------------------------
-local displayTime,background,ball,maze,maze2,borders,exitscn
+local displayTime,background,ball,maze,maze2,borders,exitscn,instructions
 local startTime=0
 local levelTime = 40
 
@@ -63,13 +63,7 @@ function nextScene()
 end
 
 local function onCollision( event )
-	if ( event.phase == "ended" ) then
-       if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
-       		timer.performWithDelay ( 200, nextScene )
-        end 
-	end
-
-	if ( event.phase == "ended" ) then
+	if ( event.phase == "began" ) then
        if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 
@@ -116,9 +110,16 @@ function scene:createScene( event )
 	displayTime.size = 20
 	displayTime:setTextColor( 0,173, 239 )
 
-	background = display.newImageRect( "background2.png", display.contentWidth, display.contentHeight )
+
+
+	background = display.newImageRect( "background.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
+
+
+	
+
+	
 
 	local planetoptions = {
    		width = 24,
@@ -178,6 +179,13 @@ function scene:createScene( event )
 	borderdown.x = display.contentCenterX
 	borderdown.y = display.contentHeight - 1 
 
+	instructions=display.newImage( "instructions_level1.png" )
+	instructions.x=display.contentCenterX
+	instructions.y=display.contentCenterY
+	instructions.name="instructions"
+
+	transition.to( instructions, { time=8000, alpha=0, y = 100} )
+
 
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
 	planetSprite.isSleepingAllowed = false
@@ -197,6 +205,7 @@ function scene:createScene( event )
 	Runtime:addEventListener( "collision", onCollision )
 
 	screenGroup:insert( background )
+	
 	screenGroup:insert(displayTime)
 	screenGroup:insert( planetSprite )
 	screenGroup:insert( maze )
@@ -206,7 +215,7 @@ function scene:createScene( event )
 	screenGroup:insert( borderdown)
 	screenGroup:insert( borderup)
 	screenGroup:insert( exitscn )
-
+	screenGroup:insert( instructions )
 
 	print( "\n1: createScene event")
 end
