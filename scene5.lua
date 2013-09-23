@@ -48,6 +48,11 @@ function nextScene()
     storyboard.gotoScene( "loadscene6")
 end
 
+local function gameOver()
+	audio.stop()
+	storyboard.gotoScene( "gameover", "fade", 300)
+end
+
 local function onCollision( event )
 	if ( event.phase == "began" ) then
        if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
@@ -60,10 +65,7 @@ local function onCollision( event )
 
 end
  
-local function gameOver()
-	audio.stop()
-	storyboard.gotoScene( "gameover", "fade", 300)
-end
+
 
 local function checkTime(event)
   now = os.time()
