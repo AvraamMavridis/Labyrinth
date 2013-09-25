@@ -16,7 +16,7 @@ local physicsData = (require "myphysics").physicsData(1.0)
 ---------------------------------------------------------------------------------
 -- BEGINNING OF  IMPLEMENTATION
 ---------------------------------------------------------------------------------
-local displayTime,background,ball,maze,maze2,borders,exitscn
+local displayTime,background,planetSprite,maze,maze2,borders,exitscn
 local startTime=0
 local levelTime = 60
 local score=0
@@ -25,14 +25,17 @@ local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 
 
-local function onGyroscopeDataReceived( event )
-    local deltaRadiansX = event.xRotation * event.deltaTime
-    local deltaDegreesX = deltaRadiansX * (180 / math.pi)
-    local deltaRadiansY = event.yRotation * event.deltaTime
-    local deltaDegreesY = deltaRadiansY * (180 / math.pi)
-    ball:applyForce( -deltaDegreesX*6, -deltaDegreesY*6, ball.x, ball.y )
-end
+-- local function onGyroscopeDataReceived( event )
+--     local deltaRadiansX = event.xRotation * event.deltaTime
+--     local deltaDegreesX = deltaRadiansX * (180 / math.pi)
+--     local deltaRadiansY = event.yRotation * event.deltaTime
+--     local deltaDegreesY = deltaRadiansY * (180 / math.pi)
+--     ball:applyForce( -deltaDegreesX*6, -deltaDegreesY*6, ball.x, ball.y )
+-- end
 
+function onTilt( event )
+	physics.setGravity( (-9.8*event.yGravity), (-9.8*event.xGravity) ) --Το σωστό
+end
 
 
 function nextScene()
@@ -66,18 +69,15 @@ local function checkTime(event)
 end
 
 local function changeGravity()
-	if(ball.y>display.contentCenterY)then
+	if(planetSprite.y>display.contentCenterY)then
 	physics.setGravity( 0,2.5 )
 	end
-	if(ball.y<display.contentCenterY)then
+	if(planetSprite.y<display.contentCenterY)then
 	physics.setGravity( 0,0)
 	end
 end
 
-local function mazeRotate()
-	maze:rotate(0.1)
- 	maze2:rotate(0.1)
-end
+
 
 
 
@@ -87,18 +87,40 @@ function scene:createScene( event )
 	physics.start(); 
 	physics.setGravity( 0,0 )
 	
-	displayTime = display.newText(levelTime, display.contentWidth-30, 5, "Aka-AcidGR-Atomic", 45)
-	displayTime.alpha=0
-	displayTime:setTextColor( 188,33, 33 )
+	displayTime = display.newText(levelTime, display.contentWidth-40, 15)
+	displayTime.alpha = 0
+	displayTime.size = 20
+	displayTime:setTextColor( 0,173, 239 )
 
-	background=display.newImage("bcklevel1.png")
-	background.x=display.contentCenterX
-	background.y=display.contentCenterY
+	background = display.newImageRect( "background2.png", display.contentWidth, display.contentHeight )
+	background:setReferencePoint( display.TopLeftReferencePoint )
+	background.x, background.y = 0, 0
 		
-	ball=display.newImage("ball1.png")
-	ball.x=30
-	ball.y=display.contentCenterY
-	ball.name="ball"
+	local planetoptions = {
+   		width = 24,
+   		height = 24,
+   		numFrames = 5
+		}
+
+	local planetSheet = graphics.newImageSheet( "earthsprite.png", planetoptions )
+
+	local planetSequenceData =
+			{
+    		name="blackholeflashing",
+		    start=1,
+		    count=5,
+		    time=500,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
+		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
+		    loopDirection = "bounce"    -- Optional. Values include: "forward","bounce"
+			}
+
+	planetSprite = display.newSprite( planetSheet, planetSequenceData )
+	planetSprite.x = 75
+	planetSprite.y = 15
+	planetSprite.x = 30
+	planetSprite.y = display.contentCenterY
+	planetSprite.name = "planet"
+	planetSprite:play()
 
 	maze=display.newImage( "maze5.png" )
 	maze.x=display.contentCenterX
@@ -110,7 +132,7 @@ function scene:createScene( event )
 	maze2.y=display.contentCenterY
 	maze2.name="maze2"
 	
-	wave=display.newImage("wave.png")
+	wave=display.newImageRect( "wave.png", display.contentWidth, display.contentHeight )
 	wave.x=display.contentCenterX
 	wave.y=display.contentCenterY
 	wave.name="wave"
@@ -127,22 +149,22 @@ function scene:createScene( event )
 	exitscn.y=display.contentCenterY
 	exitscn.name="exitscn"
 	
-	physics.addBody (ball, "dynamic",physicsData:get("ball"))
+	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
 	physics.addBody (maze, "static",physicsData:get("mazelevel6_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel6_2"))
 	physics.addBody (borders, "static",physicsData:get("borders"))
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
-	ball:addEventListener ( "touch", nextScene )
+	planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
 	Runtime:addEventListener("enterFrame", changeGravity)
-	Runtime:addEventListener( "enterFrame", mazeRotate)
-	Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
+	--Runtime:addEventListener( "enterFrame", mazeRotate)
+	--Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
 	Runtime:addEventListener( "collision", onCollision )
 	
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
-	screenGroup:insert( ball )
+	screenGroup:insert( planetSprite )
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
 	screenGroup:insert( wave )

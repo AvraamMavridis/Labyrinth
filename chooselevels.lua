@@ -234,6 +234,57 @@ function scene:createScene( event )
 		onRelease = onBackBtnRelease	-- event listener function
 	}
 
+	
+
+	------------------------level 6 -----------------------------------------
+    if(highestlevel >= 6) then
+
+    	planet5 = widget.newButton{
+	label="6",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+		onRelease = function() onPlayBtnRelease('scene6') end
+	}
+
+	planet5.x = 440
+	planet5.y = 60
+	group:insert( planet5 )
+
+    else
+    		planet5 = widget.newButton{
+		label="6",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet-over.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+	}
+
+	planet5.x = 440
+	planet5.y = 60
+	group:insert( planet5 )
+    end
+
+
+	backBtn:setReferencePoint( display.CenterReferencePoint )
+	backBtn.x = display.contentWidth*0.5
+	backBtn.y = display.contentHeight - 75
+
+	group:insert( backBtn )
+
+    backBtn = widget.newButton{
+		label="Menu",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="button3.png",
+		overFile="button-over3.png",
+		width=154, height=40,
+		onRelease = onBackBtnRelease	-- event listener function
+	}
+
 	backBtn:setReferencePoint( display.CenterReferencePoint )
 	backBtn.x = display.contentWidth*0.5
 	backBtn.y = display.contentHeight - 75
