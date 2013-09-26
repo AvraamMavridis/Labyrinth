@@ -43,7 +43,8 @@ function nextScene()
 	audio.play( exitSound  )
 	physics.stop()
     storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*60
-    storyboard.gotoScene( "menu")
+    storyboard.state2.level = 7
+    storyboard.gotoScene( "loadscene7")
 end
 
 local function onCollision( event )
@@ -69,10 +70,10 @@ local function checkTime(event)
 end
 
 local function changeGravity()
-	if(planetSprite.y>display.contentCenterY)then
-	physics.setGravity( 0,2.5 )
+	if(planetSprite.y>display.contentCenterY+10)then
+	physics.setGravity( 0,1 )
 	end
-	if(planetSprite.y<display.contentCenterY)then
+	if(planetSprite.y<display.contentCenterY+10)then
 	physics.setGravity( 0,0)
 	end
 end
@@ -122,27 +123,37 @@ function scene:createScene( event )
 	planetSprite.name = "planet"
 	planetSprite:play()
 
-	maze=display.newImage( "maze5.png" )
+	maze=display.newImage( "maze6.png" )
 	maze.x=display.contentCenterX
 	maze.y=display.contentCenterY
 	maze.name="maze"
 	
-	maze2=display.newImage( "maze5.png" )
+	maze2=display.newImage( "maze6.png" )
 	maze2.x=display.contentCenterX
 	maze2.y=display.contentCenterY
 	maze2.name="maze2"
 	
 	wave=display.newImageRect( "wave.png", display.contentWidth, display.contentHeight )
 	wave.x=display.contentCenterX
-	wave.y=display.contentCenterY
+	wave.y=display.contentCenterY+10
 	wave.name="wave"
 	wave.alpha=0.6
 	
-	borders=display.newImage( "borders.png" )
-	borders.x=display.contentCenterX
-	borders.y=display.contentCenterY
-	borders.name="borders"
-	borders.alpha=0.1
+	borderleft = display.newImage( "borderleftright.png" )
+	borderleft.x = 1
+	borderleft.y = display.contentCenterY
+
+	borderright = display.newImage( "borderleftright.png" )
+	borderright.x = display.contentWidth-1
+	borderright.y = display.contentCenterY
+
+	borderup = display.newImage( "borderupdown.png")
+	borderup.x = display.contentCenterX
+	borderup.y = 1
+
+	borderdown = display.newImage( "borderupdown.png")
+	borderdown.x = display.contentCenterX
+	borderdown.y = display.contentHeight - 1 
 	
 	exitscn=display.newImage("exit.png")
 	exitscn.x=display.contentWidth-30
@@ -150,9 +161,13 @@ function scene:createScene( event )
 	exitscn.name="exitscn"
 	
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
+	planetSprite.isSleepingAllowed = false
 	physics.addBody (maze, "static",physicsData:get("mazelevel6_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel6_2"))
-	physics.addBody (borders, "static",physicsData:get("borders"))
+	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
+    physics.addBody (borderright, "static",{ friction=0.5, bounce=0 })
+    physics.addBody (borderup, "static",{ friction=0.5, bounce=0 })
+    physics.addBody (borderdown, "static",{ friction=0.5, bounce=0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
 	planetSprite:addEventListener ( "touch", nextScene )
@@ -161,6 +176,8 @@ function scene:createScene( event )
 	--Runtime:addEventListener( "enterFrame", mazeRotate)
 	--Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
 	Runtime:addEventListener( "collision", onCollision )
+	Runtime:addEventListener( "accelerometer", onTilt )
+
 	
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
@@ -168,11 +185,12 @@ function scene:createScene( event )
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
 	screenGroup:insert( wave )
-	screenGroup:insert( borders )
+	screenGroup:insert( borderleft )
+	screenGroup:insert( borderright )
+	screenGroup:insert( borderdown)
+	screenGroup:insert( borderup)
 	screenGroup:insert( exitscn )
 	
-
-	print( "\n1: createScene event")
 end
 
 
@@ -200,9 +218,10 @@ function scene:exitScene( event )
 
 	Runtime:removeEventListener( "enterFrame", checkTime )
 	Runtime:removeEventListener( "enterFrame", changeGravity )
-	Runtime:removeEventListener( "enterFrame", mazeRotate )
-    Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
+	-- Runtime:removeEventListener( "enterFrame", mazeRotate )
+    -- Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
     Runtime:removeEventListener( "collision", onCollision )
+    Runtime:removeEventListener( "accelerometer", onTilt )
 	
 end
 

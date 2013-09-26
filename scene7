@@ -16,7 +16,7 @@ local physicsData = (require "myphysics").physicsData(1.0)
 ---------------------------------------------------------------------------------
 -- BEGINNING OF  IMPLEMENTATION
 ---------------------------------------------------------------------------------
-local displayTime,background,ball,maze,maze2,borders,exitscn
+local displayTime,background,planetSprite,maze,maze2,borders,exitscn
 local startTime=0
 local levelTime = 60
 local score=0
@@ -42,13 +42,12 @@ function nextScene()
 	audio.stop()
 	audio.play( exitSound  )
 	physics.stop()
-    storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*40
-    storyboard.state2.level = 5
-    storyboard.gotoScene( "loadscene5")
+    storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*60
+    storyboard.gotoScene( "menu")
 end
 
 local function onCollision( event )
-	if ( event.phase == "began" ) then
+	if ( event.phase == "ended" ) then
        if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 
@@ -69,9 +68,13 @@ local function checkTime(event)
   end
 end
 
-local function mazeRotate()
-	maze:rotate(0.1)
- 	maze2:rotate(0.1)
+local function changeGravity()
+	if(planetSprite.y>display.contentCenterY)then
+	physics.setGravity( 0,4.5 )
+	end
+	if(planetSprite.y<display.contentCenterY)then
+	physics.setGravity( 0,0)
+	end
 end
 
 
@@ -111,7 +114,7 @@ function scene:createScene( event )
 		    loopDirection = "bounce"    -- Optional. Values include: "forward","bounce"
 			}
 
-	local planetSprite = display.newSprite( planetSheet, planetSequenceData )
+	planetSprite = display.newSprite( planetSheet, planetSequenceData )
 	planetSprite.x = 75
 	planetSprite.y = 15
 	planetSprite.x = 30
@@ -119,15 +122,21 @@ function scene:createScene( event )
 	planetSprite.name = "planet"
 	planetSprite:play()
 
-	maze=display.newImage( "maze4.png" )
+	maze=display.newImage( "maze6.png" )
 	maze.x=display.contentCenterX
 	maze.y=display.contentCenterY
 	maze.name="maze"
 	
-	maze2=display.newImage( "maze4.png" )
+	maze2=display.newImage( "maze6.png" )
 	maze2.x=display.contentCenterX
 	maze2.y=display.contentCenterY
 	maze2.name="maze2"
+	
+	wave=display.newImageRect( "wave.png", display.contentWidth, display.contentHeight )
+	wave.x=display.contentCenterX
+	wave.y=display.contentCenterY+10
+	wave.name="wave"
+	wave.alpha=0.6
 	
 	borderleft = display.newImage( "borderleftright.png" )
 	borderleft.x = 1
@@ -146,14 +155,14 @@ function scene:createScene( event )
 	borderdown.y = display.contentHeight - 1 
 	
 	exitscn=display.newImage("exit.png")
-	exitscn.x=display.contentWidth-70
-	exitscn.y=30
+	exitscn.x=display.contentWidth-30
+	exitscn.y=display.contentCenterY
 	exitscn.name="exitscn"
 	
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
 	planetSprite.isSleepingAllowed = false
-	physics.addBody (maze, "static",physicsData:get("mazelevel4_1"))
-	physics.addBody (maze2, "static",physicsData:get("mazelevel4_2"))
+	physics.addBody (maze, "static",physicsData:get("mazelevel6_1"))
+	physics.addBody (maze2, "static",physicsData:get("mazelevel6_2"))
 	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
     physics.addBody (borderright, "static",{ friction=0.5, bounce=0 })
     physics.addBody (borderup, "static",{ friction=0.5, bounce=0 })
@@ -162,24 +171,25 @@ function scene:createScene( event )
 	
 	planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
-	Runtime:addEventListener( "enterFrame", mazeRotate)
-	-- Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
+	Runtime:addEventListener("enterFrame", changeGravity)
+	--Runtime:addEventListener( "enterFrame", mazeRotate)
+	--Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
 	Runtime:addEventListener( "collision", onCollision )
 	Runtime:addEventListener( "accelerometer", onTilt )
+
 	
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
 	screenGroup:insert( planetSprite )
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
+	screenGroup:insert( wave )
 	screenGroup:insert( borderleft )
 	screenGroup:insert( borderright )
 	screenGroup:insert( borderdown)
 	screenGroup:insert( borderup)
 	screenGroup:insert( exitscn )
 	
-
-	print( "\n1: createScene event")
 end
 
 
@@ -206,6 +216,7 @@ function scene:exitScene( event )
     audio.stop()
 
 	Runtime:removeEventListener( "enterFrame", checkTime )
+	Runtime:removeEventListener( "enterFrame", changeGravity )
 	Runtime:removeEventListener( "enterFrame", mazeRotate )
     -- Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
     Runtime:removeEventListener( "collision", onCollision )

@@ -106,7 +106,7 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene2') end
 	}
 
-	planet2.x = 120
+	planet2.x = 110
 	planet2.y = 60
 	group:insert( planet2 )
 
@@ -120,7 +120,7 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet2.x = 120
+	planet2.x = 110
 	planet2.y = 60
 	group:insert( planet2 )
     end
@@ -139,7 +139,7 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene3') end
 	}
 
-	planet3.x = 200
+	planet3.x = 180
 	planet3.y = 60
 	group:insert( planet3 )
 
@@ -153,7 +153,7 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet3.x = 200
+	planet3.x = 180
 	planet3.y = 60
 	group:insert( planet3 )
     end
@@ -172,7 +172,7 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene4') end
 	}
 
-	planet4.x = 280
+	planet4.x = 250
 	planet4.y = 60
 	group:insert( planet4 )
 
@@ -186,7 +186,7 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet4.x = 280
+	planet4.x = 250
 	planet4.y = 60
 	group:insert( planet4 )
     end
@@ -204,7 +204,7 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene5') end
 	}
 
-	planet5.x = 360
+	planet5.x = 320
 	planet5.y = 60
 	group:insert( planet5 )
 
@@ -218,28 +218,18 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet5.x = 360
+	planet5.x = 320
 	planet5.y = 60
 	group:insert( planet5 )
     end
 
 
-    backBtn = widget.newButton{
-		label="Menu",
-		labelColor = { default={255}, over={128} },
-		fontSize=25,
-		defaultFile="button3.png",
-		overFile="button-over3.png",
-		width=154, height=40,
-		onRelease = onBackBtnRelease	-- event listener function
-	}
-
-	
+   
 
 	------------------------level 6 -----------------------------------------
     if(highestlevel >= 6) then
 
-    	planet5 = widget.newButton{
+    	planet6 = widget.newButton{
 	label="6",
 		labelColor = { default={255}, over={128} },
 		fontSize=25,
@@ -249,12 +239,12 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene6') end
 	}
 
-	planet5.x = 440
-	planet5.y = 60
-	group:insert( planet5 )
+	planet6.x = 390
+	planet6.y = 60
+	group:insert( planet6 )
 
     else
-    		planet5 = widget.newButton{
+    		planet6 = widget.newButton{
 		label="6",
 		labelColor = { default={255}, over={128} },
 		fontSize=25,
@@ -263,19 +253,49 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet5.x = 440
-	planet5.y = 60
-	group:insert( planet5 )
+	planet6.x = 390
+	planet6.y = 60
+	group:insert( planet6 )
     end
 
 
-	backBtn:setReferencePoint( display.CenterReferencePoint )
-	backBtn.x = display.contentWidth*0.5
-	backBtn.y = display.contentHeight - 75
+    ------------------------level 7 -----------------------------------------
+    if(highestlevel >= 7) then
 
-	group:insert( backBtn )
+    	planet7 = widget.newButton{
+	label="7",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+		onRelease = function() onPlayBtnRelease('scene7') end
+	}
 
-    backBtn = widget.newButton{
+	planet7.x = 460
+	planet7.y = 60
+	group:insert( planet7 )
+
+    else
+    		planet7 = widget.newButton{
+		label="7",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet-over.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+	}
+
+	planet7.x = 460
+	planet7.y = 60
+	group:insert( planet7 )
+    end
+
+
+
+
+
+	backBtn = widget.newButton{
 		label="Menu",
 		labelColor = { default={255}, over={128} },
 		fontSize=25,
@@ -290,6 +310,27 @@ function scene:createScene( event )
 	backBtn.y = display.contentHeight - 75
 
 	group:insert( backBtn )
+
+
+
+
+
+
+ --    backBtn = widget.newButton{
+	-- 	label="Menu",
+	-- 	labelColor = { default={255}, over={128} },
+	-- 	fontSize=25,
+	-- 	defaultFile="button3.png",
+	-- 	overFile="button-over3.png",
+	-- 	width=154, height=40,
+	-- 	onRelease = onBackBtnRelease	-- event listener function
+	-- }
+
+	-- backBtn:setReferencePoint( display.CenterReferencePoint )
+	-- backBtn.x = display.contentWidth*0.5
+	-- backBtn.y = display.contentHeight - 75
+
+	-- group:insert( backBtn )
 	
 
 

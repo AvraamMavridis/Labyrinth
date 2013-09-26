@@ -198,6 +198,7 @@ function scene:createScene( event )
 
 	
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
+	planetSprite.isSleepingAllowed = false
 	physics.addBody (maze, "static",physicsData:get("mazelevel5_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel5_2"))
 	physics.addBody (blackholeSprite, "static",physicsData:get("blackhole"))
