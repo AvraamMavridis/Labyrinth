@@ -24,6 +24,7 @@ local now
 local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 local alienSprite
+local explosionSprite = 0
 
 -- local function onGyroscopeDataReceived( event )
 --     local deltaRadiansX = event.xRotation * event.deltaTime
@@ -46,19 +47,28 @@ function nextScene()
     storyboard.gotoScene( "menu")
 end
 
+local function gameOver()
+	audio.stop()
+	storyboard.gotoScene( "gameover", "fade", 300)
+end
+
 local function onCollision( event )
-	if ( event.phase == "ended" ) then
+	if ( event.phase == "began" ) then
        if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
+        end 
+        if((event.object1.name =="alien" and event.object2.name =="planet") or (event.object2.name =="alien" and event.object1.name =="planet")) then
+        	planetSprite.isVisible = false
+        	explosionSprite.x=planetSprite.x
+        	explosionSprite.y=planetSprite.y
+			explosionSprite:play()
+			timer.performWithDelay( 3000, gameOver )
+			    
         end 
 	end
 
 end
  
-local function gameOver()
-	audio.stop()
-	storyboard.gotoScene( "gameover", "fade", 300)
-end
 
 local function checkTime(event)
   now = os.time()
@@ -68,14 +78,7 @@ local function checkTime(event)
   end
 end
 
-local function changeGravity()
-	if(planetSprite.y>display.contentCenterY)then
-	physics.setGravity( 0,4.5 )
-	end
-	if(planetSprite.y<display.contentCenterY)then
-	physics.setGravity( 0,0)
-	end
-end
+
 
 local function moveAlien()
 	alienSprite:applyForce( math.random(-50, 50), math.random(-50, 50), alienSprite.x, alienSprite.y )
@@ -179,6 +182,30 @@ function scene:createScene( event )
 	exitscn.x=display.contentWidth-30
 	exitscn.y=display.contentCenterY
 	exitscn.name="exitscn"
+
+	local explosionoptions = {
+   		width = 32,
+   		height = 32,
+   		numFrames = 24
+		}
+		
+	local explosionSheet = graphics.newImageSheet( "explosion.png", explosionoptions )
+
+	local explosionSequenceData =
+		{
+    		name="explosionsequence",
+		    start=1,
+		    count=24,
+		    time=2000,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
+		    loopCount = 1,    -- Optional. Default is 0 (loop indefinitely)
+		    loopDirection = "forward"    -- Optional. Values include: "forward","bounce"
+		}
+
+
+	explosionSprite = display.newSprite( explosionSheet, explosionSequenceData )
+	explosionSprite.x = 100
+	explosionSprite.y = 50
+	explosionSprite.name = "explosion"
 	
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
 	planetSprite.isSleepingAllowed = false
@@ -193,7 +220,6 @@ function scene:createScene( event )
 	
 	planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
-	Runtime:addEventListener("enterFrame", changeGravity)
 	Runtime:addEventListener("enterFrame", moveAlien)
 	--Runtime:addEventListener( "enterFrame", mazeRotate)
 	--Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
@@ -212,6 +238,8 @@ function scene:createScene( event )
 	screenGroup:insert( borderup)
 	screenGroup:insert( alienSprite )
 	screenGroup:insert( exitscn )
+	screenGroup:insert( explosionSprite )
+	
 	
 end
 
@@ -239,7 +267,7 @@ function scene:exitScene( event )
     audio.stop()
 
 	Runtime:removeEventListener( "enterFrame", checkTime )
-	Runtime:removeEventListener( "enterFrame", changeGravity )
+	
 	-- Runtime:removeEventListener( "enterFrame", mazeRotate )
 	Runtime:removeEventListener("enterFrame", moveAlien)
     -- Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
