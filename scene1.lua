@@ -112,7 +112,7 @@ function scene:createScene( event )
 
 
 
-	background = display.newImageRect( "background.png", display.contentWidth, display.contentHeight )
+	background = display.newImageRect( "background2.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
 
