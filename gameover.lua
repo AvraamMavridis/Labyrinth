@@ -19,7 +19,6 @@ local gameoverSound = audio.loadStream ( "gameover.mp3" )
 local buttonClickSound = audio.loadSound("button_click.wav")
 
 local function onBackBtnRelease()
-	print(10)
 	-- go to level1.lua scene
 	audio.stop()
 	audio.play(buttonClickSound)

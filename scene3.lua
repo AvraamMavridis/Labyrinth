@@ -259,6 +259,12 @@ function scene:createScene( event )
 	explosionSprite.y = 50
 	explosionSprite.name = "explosion"
 
+	instructions=display.newImage( "instructions_level3.png" )
+	instructions.x=display.contentCenterX
+	instructions.y=display.contentCenterY
+	instructions.name="instructions"
+
+	transition.to( instructions, { time=8000, alpha=0, y = 100} )
 
 	
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
@@ -297,6 +303,7 @@ function scene:createScene( event )
 	screenGroup:insert( borderup)
 	screenGroup:insert( exitscn )
 	screenGroup:insert( explosionSprite )
+	screenGroup:insert( instructions )
 	
 
 	print( "\n1: createScene event")
