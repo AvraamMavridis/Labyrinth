@@ -52,9 +52,9 @@ function nextScene()
 	audio.stop()
 	audio.play( exitSound  )
 	physics.stop()
-    storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*60
+    storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*80
     storyboard.state2.level = 9
-    storyboard.gotoScene( "menu")
+    storyboard.gotoScene( "loadscene9")
 end
 
 local function gameOver()
@@ -69,10 +69,18 @@ local function onCollision( event )
         end 
         if((event.object1.name =="alien" and event.object2.name =="planet") or (event.object2.name =="alien" and event.object1.name =="planet")) then
         	planetSprite.isVisible = false
+        	explosionSprite.x=event.x
+        	explosionSprite.y=event.y
+			explosionSprite:play()
+			timer.performWithDelay( 1500, gameOver )	    
+        end 
+        if(event.object1.name =="blackholeSprite" or event.object2.name =="blackholeSprite") then
+        	planetSprite.isVisible = false
         	explosionSprite.x=planetSprite.x
         	explosionSprite.y=planetSprite.y
 			explosionSprite:play()
-			timer.performWithDelay( 3000, gameOver )	    
+			timer.performWithDelay( 3000, gameOver )
+			    
         end 
    --      if((event.object1.name =="maze" and event.object2.name =="planet") or (event.object2.name =="maze" and event.object1.name =="planet")) then
    --      	local myCircle = display.newCircle( event.x, event.y, 3 )

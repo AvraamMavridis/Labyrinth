@@ -298,7 +298,7 @@ function scene:createScene( event )
 	label="8",
 		labelColor = { default={255}, over={128} },
 		fontSize=25,
-		defaultFile="levelplanet2.png",
+		defaultFile="levelplanet.png",
 		overFile="levelplanet-over.png",
 		width=62, height=62,
 		onRelease = function() onPlayBtnRelease('scene8') end
@@ -323,37 +323,37 @@ function scene:createScene( event )
 	group:insert( planet8 )
     end
 
-    ------------------------level 9 -----------------------------------------
-    if(highestlevel >= 9) then
+ --    ------------------------level 9 -----------------------------------------
+ --    if(highestlevel >= 9) then
 
-    	planet9 = widget.newButton{
-	label="9",
-		labelColor = { default={255}, over={128} },
-		fontSize=25,
-		defaultFile="levelplanet.png",
-		overFile="levelplanet-over.png",
-		width=62, height=62,
-		onRelease = function() onPlayBtnRelease('scene8') end
-	}
+ --    	planet9 = widget.newButton{
+	-- label="9",
+	-- 	labelColor = { default={255}, over={128} },
+	-- 	fontSize=25,
+	-- 	defaultFile="levelplanet.png",
+	-- 	overFile="levelplanet-over.png",
+	-- 	width=62, height=62,
+	-- 	onRelease = function() onPlayBtnRelease('scene9') end
+	-- }
 
-	planet9.x = 40
-	planet9.y = 140
-	group:insert( planet9 )
+	-- planet9.x = 40
+	-- planet9.y = 140
+	-- group:insert( planet9 )
 
-    else
-    	planet9 = widget.newButton{
-		label="9",
-		labelColor = { default={255}, over={128} },
-		fontSize=25,
-		defaultFile="levelplanet-over.png",
-		overFile="levelplanet-over.png",
-		width=62, height=62,
-	}
+ --    else
+ --    	planet9 = widget.newButton{
+	-- 	label="9",
+	-- 	labelColor = { default={255}, over={128} },
+	-- 	fontSize=25,
+	-- 	defaultFile="levelplanet-over.png",
+	-- 	overFile="levelplanet-over.png",
+	-- 	width=62, height=62,
+	-- }
 
-	planet9.x = 110
-	planet9.y = 140
-	group:insert( planet9 )
-    end
+	-- planet9.x = 110
+	-- planet9.y = 140
+	-- group:insert( planet9 )
+ --    end
 
 
 

@@ -21,12 +21,9 @@ local buttonClickSound = audio.loadSound("button_click.wav")
 
 
 local function onBackBtnRelease()
-	print(10)
-	-- go to level1.lua scene
 	audio.stop()
 	audio.play(buttonClickSound)
 	storyboard.gotoScene( "menu", "fade", 500 )
-
 	return true	-- indicates successful touch
 end
 
@@ -46,7 +43,7 @@ function scene:createScene( event )
 	score = display.newText(" ", display.contentCenterX-100, display.contentCenterY-50)
 	
 	for row in db:nrows("SELECT * FROM levelstable WHERE content=(SELECT max(content) FROM levelstable)") do
-	 leveltext.text = "Finished Levels: " .. row.content
+	 leveltext.text = "Finished Levels: " .. (row.content - 1)
 	 leveltext.size=30
 	 leveltext:setTextColor ( 0, 173, 240 ) 
 	end

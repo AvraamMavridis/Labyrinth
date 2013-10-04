@@ -50,7 +50,7 @@ function nextScene()
 	audio.stop()
 	audio.play( exitSound  )
 	physics.stop()
-    storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*60
+    storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*70
     storyboard.state2.level = 8
     storyboard.gotoScene( "loadscene8")
 end
@@ -106,6 +106,16 @@ function scene:createScene( event )
 	background = display.newImageRect( "background2.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
+
+	maze=display.newImage( "maze7.png" )
+	maze.x=display.contentCenterX
+	maze.y=display.contentCenterY
+	maze.name="maze"
+	
+	maze2=display.newImage( "maze7.png" )
+	maze2.x=display.contentCenterX
+	maze2.y=display.contentCenterY
+	maze2.name="maze2"
 		
 	local planetoptions = {
    		width = 24,
@@ -155,15 +165,7 @@ function scene:createScene( event )
 	alienSprite.name = "alien"
 	alienSprite:play()
 
-	maze=display.newImage( "maze6.png" )
-	maze.x=display.contentCenterX
-	maze.y=display.contentCenterY
-	maze.name="maze"
 	
-	maze2=display.newImage( "maze6.png" )
-	maze2.x=display.contentCenterX
-	maze2.y=display.contentCenterY
-	maze2.name="maze2"
 	
 	
 	borderleft = display.newImage( "borderleftright.png" )
@@ -214,8 +216,8 @@ function scene:createScene( event )
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
 	planetSprite.isSleepingAllowed = false
 	physics.addBody (alienSprite, "dynamic",physicsData:get("earthphysics"))
-	physics.addBody (maze, "static",physicsData:get("mazelevel6_1"))
-	physics.addBody (maze2, "static",physicsData:get("mazelevel6_2"))
+	physics.addBody (maze, "static",physicsData:get("mazelevel7_1"))
+	physics.addBody (maze2, "static",physicsData:get("mazelevel7_2"))
 	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
     physics.addBody (borderright, "static",{ friction=0.5, bounce=0 })
     physics.addBody (borderup, "static",{ friction=0.5, bounce=0 })
@@ -233,9 +235,9 @@ function scene:createScene( event )
 	
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
-	screenGroup:insert( planetSprite )
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
+	screenGroup:insert( planetSprite )
 	screenGroup:insert( borderleft )
 	screenGroup:insert( borderright )
 	screenGroup:insert( borderdown)
