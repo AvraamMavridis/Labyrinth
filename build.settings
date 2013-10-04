@@ -34,9 +34,7 @@ settings = {
 {
    usesPermissions =
    {
-      "android.permission.INTERNET",
-      "com.android.vending.CHECK_LICENSE",
-      "com.android.vending.BILLING",
+      
    },
 }
 	
@@ -44,7 +42,7 @@ settings = {
 	-- Android permissions
 
 	androidPermissions = {
-  		"android.permission.INTERNET",
+  		
   	},
 
 	]]--

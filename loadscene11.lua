@@ -24,7 +24,7 @@ local buttonClickSound = audio.loadSound("button_click.wav")
 
 local function onPlayBtnRelease()
     audio.play(buttonClickSound)
-	storyboard.gotoScene( "scene10", "fade", 500 )
+	storyboard.gotoScene( "scene11", "fade", 500 )
 	return true	
 end
 

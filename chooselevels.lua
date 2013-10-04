@@ -52,6 +52,9 @@ local backBtn
 
 function scene:createScene( event )
 	local group = self.view
+
+	local positionX = 10+display.contentWidth/7
+
 	
 	
 
@@ -88,7 +91,7 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene1') end
 	}
 
-	planet1.x = 40
+	planet1.x = positionX
 	planet1.y = 60
 	group:insert( planet1 )
     end
@@ -106,7 +109,7 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene2') end
 	}
 
-	planet2.x = 110
+	planet2.x = 2*positionX
 	planet2.y = 60
 	group:insert( planet2 )
 
@@ -120,7 +123,7 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet2.x = 110
+	planet2.x = 2*positionX
 	planet2.y = 60
 	group:insert( planet2 )
     end
@@ -139,7 +142,7 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene3') end
 	}
 
-	planet3.x = 180
+	planet3.x = 3*positionX
 	planet3.y = 60
 	group:insert( planet3 )
 
@@ -153,7 +156,7 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet3.x = 180
+	planet3.x = 3*positionX
 	planet3.y = 60
 	group:insert( planet3 )
     end
@@ -172,7 +175,7 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene4') end
 	}
 
-	planet4.x = 250
+	planet4.x = 4*positionX
 	planet4.y = 60
 	group:insert( planet4 )
 
@@ -186,7 +189,7 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet4.x = 250
+	planet4.x = 4*positionX
 	planet4.y = 60
 	group:insert( planet4 )
     end
@@ -204,7 +207,7 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene5') end
 	}
 
-	planet5.x = 320
+	planet5.x = 5*positionX
 	planet5.y = 60
 	group:insert( planet5 )
 
@@ -218,7 +221,7 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet5.x = 320
+	planet5.x = 5*positionX
 	planet5.y = 60
 	group:insert( planet5 )
     end
@@ -239,8 +242,8 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene6') end
 	}
 
-	planet6.x = 390
-	planet6.y = 60
+	planet6.x = positionX
+	planet6.y = 140
 	group:insert( planet6 )
 
     else
@@ -253,8 +256,8 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet6.x = 390
-	planet6.y = 60
+	planet6.x = positionX
+	planet6.y = 140
 	group:insert( planet6 )
     end
 
@@ -272,8 +275,8 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene7') end
 	}
 
-	planet7.x = 460
-	planet7.y = 60
+	planet7.x = 2*positionX
+	planet7.y = 140
 	group:insert( planet7 )
 
     else
@@ -286,8 +289,8 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet7.x = 460
-	planet7.y = 60
+	planet7.x = 2*positionX
+	planet7.y = 140
 	group:insert( planet7 )
     end
 
@@ -304,7 +307,7 @@ function scene:createScene( event )
 		onRelease = function() onPlayBtnRelease('scene8') end
 	}
 
-	planet8.x = 40
+	planet8.x = 3*positionX
 	planet8.y = 140
 	group:insert( planet8 )
 
@@ -318,42 +321,108 @@ function scene:createScene( event )
 		width=62, height=62,
 	}
 
-	planet8.x = 40
+	planet8.x = 3*positionX
 	planet8.y = 140
 	group:insert( planet8 )
     end
 
- --    ------------------------level 9 -----------------------------------------
- --    if(highestlevel >= 9) then
+    ------------------------level 9 -----------------------------------------
+    if(highestlevel >= 9) then
 
- --    	planet9 = widget.newButton{
-	-- label="9",
-	-- 	labelColor = { default={255}, over={128} },
-	-- 	fontSize=25,
-	-- 	defaultFile="levelplanet.png",
-	-- 	overFile="levelplanet-over.png",
-	-- 	width=62, height=62,
-	-- 	onRelease = function() onPlayBtnRelease('scene9') end
-	-- }
+    	planet9 = widget.newButton{
+	label="9",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+		onRelease = function() onPlayBtnRelease('scene9') end
+	}
 
-	-- planet9.x = 40
-	-- planet9.y = 140
-	-- group:insert( planet9 )
+	planet9.x = 4*positionX
+	planet9.y = 140
+	group:insert( planet9 )
 
- --    else
- --    	planet9 = widget.newButton{
-	-- 	label="9",
-	-- 	labelColor = { default={255}, over={128} },
-	-- 	fontSize=25,
-	-- 	defaultFile="levelplanet-over.png",
-	-- 	overFile="levelplanet-over.png",
-	-- 	width=62, height=62,
-	-- }
+    else
+    	planet9 = widget.newButton{
+		label="9",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet-over.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+	}
 
-	-- planet9.x = 110
-	-- planet9.y = 140
-	-- group:insert( planet9 )
- --    end
+	planet9.x = 4*positionX
+	planet9.y = 140
+	group:insert( planet9 )
+    end
+
+    ------------------------level 10 -----------------------------------------
+    if(highestlevel >= 10) then
+
+    	planet10 = widget.newButton{
+	label="10",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+		onRelease = function() onPlayBtnRelease('scene10') end
+	}
+
+	planet10.x = 5*positionX
+	planet10.y = 140
+	group:insert( planet10 )
+
+    else
+    	planet10 = widget.newButton{
+		label="10",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet-over.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+	}
+
+	planet10.x = 5*positionX
+	planet10.y = 140
+	group:insert( planet10 )
+    end
+
+    ------------------------level 11 -----------------------------------------
+    if(highestlevel >= 11) then
+
+    	planet11 = widget.newButton{
+	label="11",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+		onRelease = function() onPlayBtnRelease('scene11') end
+	}
+
+	planet11.x = positionX
+	planet11.y = 220
+	group:insert( planet11 )
+
+    else
+    	planet11 = widget.newButton{
+		label="11",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet-over.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+	}
+
+	planet11.x = positionX
+	planet11.y = 220
+	group:insert( planet11 )
+    end
+
+
 
 
 

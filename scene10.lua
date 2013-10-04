@@ -19,13 +19,14 @@ physics.setReportCollisionsInContentCoordinates( true )
 ---------------------------------------------------------------------------------
 local displayTime,background,planetSprite,maze,maze2,borders,exitscn
 local startTime=0
-local levelTime = 60
+local levelTime = 120
 local score=0
 local now
 local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 local explosionSprite = 0
 local screenGroup
+local alienSprite
 
 -- local function onGyroscopeDataReceived( event )
 --     local deltaRadiansX = event.xRotation * event.deltaTime
@@ -47,7 +48,7 @@ function nextScene()
 	physics.stop()
     storyboard.state.score = storyboard.state.score+ (levelTime - (now - startTime))*100
     storyboard.state2.level = 11
-    storyboard.gotoScene( "gameover")
+    storyboard.gotoScene( "loadscene11")
 end
 
 local function gameOver()
@@ -60,16 +61,25 @@ local function onCollision( event )
        if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 
-         if(event.object1.name =="blackholeSprite" or event.object2.name =="blackholeSprite") then
+        if((event.object1.name =="alien" and event.object2.name =="planet") or (event.object2.name =="alien" and event.object1.name =="planet")) then
         	planetSprite.isVisible = false
-        	explosionSprite.x=event.x
-        	explosionSprite.y=event.y
+        	explosionSprite.x=planetSprite.x
+        	explosionSprite.y=planetSprite.y
 			explosionSprite:play()
-			timer.performWithDelay( 1000, gameOver )
-			    
+			timer.performWithDelay( 3000, gameOver )	    
         end 
-   
-     
+        if((event.object1.name =="maze" and event.object2.name =="planet") or (event.object2.name =="maze" and event.object1.name =="planet")) then
+        	local myCircle = display.newCircle( event.x, event.y, 4 )
+			myCircle:setFillColor(math.random(0, 255),math.random(0, 255),math.random(0, 255))  
+			screenGroup:insert( myCircle )
+			--maze.isVisible
+        end 
+        if((event.object1.name =="maze" and event.object2.name =="alien") or (event.object2.name =="maze" and event.object1.name =="alien")) then
+        	local myCircle = display.newCircle( event.x, event.y, 4 )
+			myCircle:setFillColor(math.random(0, 255),math.random(0, 255),math.random(0, 255))  
+			screenGroup:insert( myCircle )
+			--maze.isVisible
+        end 
 	end
 
 end
@@ -83,6 +93,10 @@ local function checkTime(event)
   end
 end
 
+
+local function moveAlien()
+	alienSprite:applyForce( math.random(-50, 50), math.random(-50, 50), alienSprite.x, alienSprite.y )
+end
 
 
 
@@ -128,61 +142,43 @@ function scene:createScene( event )
 	planetSprite.name = "planet"
 	planetSprite:play()
 
-	
-	
-	maze=display.newImage( "maze11.png" )
-	maze.x=display.contentCenterX
-	maze.y=display.contentCenterY
-	maze.name="maze"
-
-	
-	maze2=display.newImage( "maze11.png" )
-	maze2.x=display.contentCenterX
-	maze2.y=display.contentCenterY
-	maze2.name="maze"
-
-	local blackholeoptions = {
+	local alienoptions = {
    		width = 32,
-   		height = 24,
-   		numFrames = 4
+   		height = 32,
+   		numFrames = 8
 		}
 
-	local blackholeSheet = graphics.newImageSheet( "blackholesheet.png", blackholeoptions )
+	local alienSheet = graphics.newImageSheet( "aliensheet.png", alienoptions )
 
-	local blackholeSequenceData =
+	local alienSequenceData =
 			{
-    		name="blackholeflashing",
-		    start=1, --Starting loop
-		    count=4,
-		    time=800,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
+    		name="alienflashing",
+		    start=1,
+		    count=8,
+		    time=1000,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
 		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
 		    loopDirection = "forward"    -- Optional. Values include: "forward","bounce"
 			}
 
-	blackholeSprite = display.newSprite( blackholeSheet, blackholeSequenceData )
-	blackholeSprite.x = display.contentCenterX
-	blackholeSprite.y = display.contentCenterY
-	blackholeSprite.name = "blackholeSprite"
-	blackholeSprite:play()
+	alienSprite = display.newSprite( alienSheet, alienSequenceData )
+	alienSprite.x = display.contentCenterX-49
+	alienSprite.y = display.contentCenterY+40
+	alienSprite.name = "alien"
+	alienSprite:play()
 
-	blackholeSprite2 = display.newSprite( blackholeSheet, blackholeSequenceData )
-	blackholeSprite2.x = 155
-	blackholeSprite2.y = display.contentCenterY+45
-	blackholeSprite2.name = "blackholeSprite"
-	blackholeSprite2:play()
-
-	blackholeSprite3 = display.newSprite( blackholeSheet, blackholeSequenceData )
-	blackholeSprite3.x = display.contentCenterX-60
-	blackholeSprite3.y = display.contentCenterY-20
-	blackholeSprite3.name = "blackholeSprite"
-	blackholeSprite3:play()
-
-	blackholeSprite4 = display.newSprite( blackholeSheet, blackholeSequenceData )
-	blackholeSprite4.x = display.contentCenterX-10
-	blackholeSprite4.y = display.contentCenterY-90
-	blackholeSprite4.name = "blackholeSprite"
-	blackholeSprite4:play()
 	
+	maze=display.newImage( "maze10.png" )
+	maze.x=display.contentCenterX
+	maze.y=display.contentCenterY
+	maze.name="maze"
+	maze.isVisible=false
+
+	
+	maze2=display.newImage( "maze10.png" )
+	maze2.x=display.contentCenterX
+	maze2.y=display.contentCenterY
+	maze2.name="maze"
+	maze2.isVisible=false
 	
 	
 	borderleft = display.newImage( "borderleftright.png" )
@@ -234,6 +230,7 @@ function scene:createScene( event )
 	
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
 	planetSprite.isSleepingAllowed = false
+	physics.addBody (alienSprite, "dynamic",physicsData:get("earthphysics"))
 	physics.addBody (maze, "static",physicsData:get("mazelevel10_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel10_2"))
 	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
@@ -244,6 +241,7 @@ function scene:createScene( event )
 	
 	planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
+	Runtime:addEventListener("enterFrame", moveAlien)
 
 	--Runtime:addEventListener( "enterFrame", mazeRotate)
 	--Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
@@ -254,12 +252,9 @@ function scene:createScene( event )
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
 	screenGroup:insert( planetSprite )
+	screenGroup:insert( alienSprite )
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
-	screenGroup:insert( blackholeSprite )
-	screenGroup:insert( blackholeSprite2 )
-	screenGroup:insert( blackholeSprite3 )
-	screenGroup:insert( blackholeSprite4 )
 	screenGroup:insert( borderleft )
 	screenGroup:insert( borderright )
 	screenGroup:insert( borderdown)
@@ -295,6 +290,7 @@ function scene:exitScene( event )
     audio.stop()
 
 	Runtime:removeEventListener( "enterFrame", checkTime )
+	Runtime:removeEventListener("enterFrame", moveAlien)
 	
 	-- Runtime:removeEventListener( "enterFrame", mazeRotate )
 

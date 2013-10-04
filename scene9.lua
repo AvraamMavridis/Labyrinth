@@ -45,9 +45,9 @@ function nextScene()
 	audio.stop()
 	audio.play( exitSound  )
 	physics.stop()
-    storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*90
-    storyboard.state2.level = 9
-    storyboard.gotoScene( "menu")
+    storyboard.state.score = storyboard.state.score+ (levelTime - (now - startTime))*90
+    storyboard.state2.level = 10
+    storyboard.gotoScene( "loadscene10")
 end
 
 local function gameOver()
@@ -60,13 +60,13 @@ local function onCollision( event )
        if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 
-        if((event.object1.name =="alien" and event.object2.name =="planet") or (event.object2.name =="alien" and event.object1.name =="planet")) then
-        	planetSprite.isVisible = false
-        	explosionSprite.x=planetSprite.x
-        	explosionSprite.y=planetSprite.y
-			explosionSprite:play()
-			timer.performWithDelay( 3000, gameOver )	    
-        end 
+   --      if((event.object1.name =="alien" and event.object2.name =="planet") or (event.object2.name =="alien" and event.object1.name =="planet")) then
+   --      	planetSprite.isVisible = false
+   --      	explosionSprite.x=planetSprite.x
+   --      	explosionSprite.y=planetSprite.y
+			-- explosionSprite:play()
+			-- timer.performWithDelay( 3000, gameOver )	    
+   --      end 
         if((event.object1.name =="maze" and event.object2.name =="planet") or (event.object2.name =="maze" and event.object1.name =="planet")) then
         	local myCircle = display.newCircle( event.x, event.y, 4 )
 			myCircle:setFillColor(math.random(0, 255),math.random(0, 255),math.random(0, 255))  
@@ -133,24 +133,7 @@ function scene:createScene( event )
 	planetSprite.name = "planet"
 	planetSprite:play()
 
-	local alienoptions = {
-   		width = 32,
-   		height = 32,
-   		numFrames = 8
-		}
-
-	local alienSheet = graphics.newImageSheet( "aliensheet.png", alienoptions )
-
-	local alienSequenceData =
-			{
-    		name="alienflashing",
-		    start=1,
-		    count=8,
-		    time=1000,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
-		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
-		    loopDirection = "forward"    -- Optional. Values include: "forward","bounce"
-			}
-
+	
 	
 	maze=display.newImage( "maze8.png" )
 	maze.x=display.contentCenterX

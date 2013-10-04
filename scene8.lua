@@ -72,14 +72,14 @@ local function onCollision( event )
         	explosionSprite.x=event.x
         	explosionSprite.y=event.y
 			explosionSprite:play()
-			timer.performWithDelay( 1500, gameOver )	    
+			timer.performWithDelay( 1000, gameOver )	    
         end 
         if((event.object1.name =="blackholeSprite" and event.object2.name =="planet") or (event.object2.name =="blackholeSprite" and event.object1.name =="planet")) then
         	planetSprite.isVisible = false
         	explosionSprite.x=planetSprite.x
         	explosionSprite.y=planetSprite.y
 			explosionSprite:play()
-			timer.performWithDelay( 1500, gameOver )
+			timer.performWithDelay( 1000, gameOver )
 			    
         end 
    --      if((event.object1.name =="maze" and event.object2.name =="planet") or (event.object2.name =="maze" and event.object1.name =="planet")) then
@@ -251,7 +251,7 @@ function scene:createScene( event )
 
 	blackholeSprite = display.newSprite( blackholeSheet, blackholeSequenceData )
 	blackholeSprite.x = display.contentCenterX
-	blackholeSprite.y = display.contentHeight-27
+	blackholeSprite.y = display.contentHeight-22
 	blackholeSprite.name = "blackholeSprite"
 	blackholeSprite:play()
 
