@@ -39,20 +39,26 @@ function scene:createScene( event )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
 
-	leveltext = display.newText(" ", display.contentCenterX-100, display.contentCenterY-20)
+	highscorePic = display.newImageRect( "highscore.png", display.contentWidth, display.contentHeight )
+	highscorePic:setReferencePoint( display.TopLeftReferencePoint )
+	highscorePic.x, highscorePic.y = 0, 0
+
+	-- leveltext = display.newText(" ", display.contentCenterX-100, display.contentCenterY-20)
 	score = display.newText(" ", display.contentCenterX-100, display.contentCenterY-50)
 	
-	for row in db:nrows("SELECT * FROM levelstable WHERE content=(SELECT max(content) FROM levelstable)") do
-	 leveltext.text = "Finished Levels: " .. (row.content - 1)
-	 leveltext.size=30
-	 leveltext:setTextColor ( 0, 173, 240 ) 
-	end
+	-- for row in db:nrows("SELECT * FROM levelstable WHERE content=(SELECT max(content) FROM levelstable)") do
+	--  leveltext.text = "Finished Levels: " .. (row.content - 1)
+	--  leveltext.size=30
+	--  leveltext:setTextColor ( 80, 123, 151 )  
+	-- end
 
     
 	for row in db:nrows("SELECT * FROM highscoretable WHERE content=(SELECT max(content) FROM highscoretable)") do
-	 score.text = "Highscore: " .. row.content
-	 score.size=30
-	 score:setTextColor ( 0, 173, 240 ) 
+	 score.text = row.content
+	 score.size=40
+	 score.x = display.contentCenterX
+	 score.y = display.contentCenterY
+	 score:setTextColor ( 173, 0, 19 ) 
 	end
 
 	-- for row in db:nrows("SELECT * FROM levelstable WHERE content=(SELECT max(content) FROM levelstable)") do
@@ -80,7 +86,7 @@ function scene:createScene( event )
 	
 	
     group:insert( background )
-    group:insert( leveltext )
+    group:insert( highscorePic )
     group:insert( score )
     group:insert( backBtn )
 

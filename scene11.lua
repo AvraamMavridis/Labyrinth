@@ -46,7 +46,7 @@ function nextScene()
 	audio.play( exitSound  )
 	physics.stop()
     storyboard.state.score = storyboard.state.score+ (levelTime - (now - startTime))*100
-    storyboard.state2.level = 11
+    storyboard.state2.level = 12
     storyboard.gotoScene( "loadscene12")
 end
 

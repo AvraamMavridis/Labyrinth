@@ -24,6 +24,7 @@ local now
 local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 local blackholeSprite,blackholeSprite2
+local explosionSprite = 0
 
 
 -- local function onGyroscopeDataReceived( event )
@@ -58,8 +59,12 @@ local function onCollision( event )
        if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 
-        if(event.object1.name =="blackholeSprite" or event.object2.name =="blackholeSprite") then
-       		gameOver()
+          if((event.object1.name =="blackholeSprite" and event.object2.name =="planet") or (event.object2.name =="blackholeSprite" and event.object1.name =="planet")) then
+        	planetSprite.isVisible = false
+        	explosionSprite.x=event.x
+        	explosionSprite.y=event.y
+			explosionSprite:play()
+			timer.performWithDelay( 1000, gameOver )    
         end 
 	end
 
@@ -127,6 +132,31 @@ function scene:createScene( event )
 	planetSprite.y = display.contentCenterY
 	planetSprite.name = "planet"
 	planetSprite:play()
+
+	local explosionoptions = {
+   		width = 32,
+   		height = 32,
+   		numFrames = 24
+		}
+		
+	local explosionSheet = graphics.newImageSheet( "explosion.png", explosionoptions )
+
+	local explosionSequenceData =
+		{
+    		name="explosionsequence",
+		    start=1,
+		    count=24,
+		    time=2000,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
+		    loopCount = 1,    -- Optional. Default is 0 (loop indefinitely)
+		    loopDirection = "forward"    -- Optional. Values include: "forward","bounce"
+		}
+
+
+
+	explosionSprite = display.newSprite( explosionSheet, explosionSequenceData )
+	explosionSprite.x = 100
+	explosionSprite.y = 50
+	explosionSprite.name = "explosion"
 
 	maze=display.newImage( "maze5.png" )
 	maze.x=display.contentCenterX
@@ -203,6 +233,7 @@ function scene:createScene( event )
 	physics.addBody (maze2, "static",physicsData:get("mazelevel5_2"))
 	physics.addBody (blackholeSprite, "static",physicsData:get("blackhole"))
 	physics.addBody (blackholeSprite2, "static",physicsData:get("blackhole"))
+	physics.addBody (blackholeSprite3, "static",physicsData:get("blackhole"))
 	blackholeSprite.isSleepingAllowed = false
 	blackholeSprite2.isSleepingAllowed = false
 	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
@@ -222,6 +253,7 @@ function scene:createScene( event )
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
 	screenGroup:insert( planetSprite )
+	screenGroup:insert( explosionSprite )
 	screenGroup:insert( blackholeSprite )
 	screenGroup:insert( blackholeSprite2 )
 	screenGroup:insert( blackholeSprite3)

@@ -62,11 +62,14 @@ function scene:createScene( event )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
 	
+	local gameoverPic = display.newImageRect("gameover.png",384, 128 )
+	gameoverPic.x = display.contentCenterX 
+	gameoverPic.y = display.contentCenterY - 100
 
 	
-	local gameoverText=display.newText("GAME OVER\nScore: " ..  storyboard.state.score,display.contentCenterX-100, display.contentCenterY-50)
+	local gameoverText=display.newText("Total Score " ..  storyboard.state.score,display.contentCenterX-80, display.contentCenterY-50)
 	gameoverText:setReferencePoint( display.CenterReferencePoint )
-	gameoverText:setTextColor (250, 250, 250 )
+	gameoverText:setTextColor (220, 0, 55 )
 	gameoverText.size=40
 	--gameover.x = display.contentWidth * 0.5
 	--gameoverText.y = 150
@@ -88,6 +91,7 @@ function scene:createScene( event )
 
 	group:insert( backBtn )
 	group:insert( gameoverText )
+	group:insert( gameoverPic )
 
 
 	

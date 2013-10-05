@@ -220,7 +220,7 @@ function scene:enterScene( event )
 
 	print( "1: enterScene event" )
 	physics.start()
-    audio.play(backgroundMusicSound)
+    audio.play(backgroundMusicSound,{channel = 1,loops=-1})
 	startTime = os.time()
 	transition.to ( displayTime, {alpha=1,time=500} )
 

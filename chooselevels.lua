@@ -435,7 +435,7 @@ function scene:createScene( event )
 		defaultFile="levelplanet.png",
 		overFile="levelplanet-over.png",
 		width=62, height=62,
-		onRelease = function() onPlayBtnRelease('scene11') end
+		onRelease = function() onPlayBtnRelease('scene12') end
 	}
 
 	planet12.x = 2*positionX
@@ -467,7 +467,7 @@ function scene:createScene( event )
 		defaultFile="levelplanet.png",
 		overFile="levelplanet-over.png",
 		width=62, height=62,
-		onRelease = function() onPlayBtnRelease('scene11') end
+		onRelease = function() onPlayBtnRelease('scene13') end
 	}
 
 	planet13.x = 3*positionX
@@ -499,7 +499,7 @@ function scene:createScene( event )
 		defaultFile="levelplanet.png",
 		overFile="levelplanet-over.png",
 		width=62, height=62,
-		onRelease = function() onPlayBtnRelease('scene11') end
+		onRelease = function() onPlayBtnRelease('scene14') end
 	}
 
 	planet14.x = 4*positionX
@@ -531,7 +531,7 @@ function scene:createScene( event )
 		defaultFile="levelplanet.png",
 		overFile="levelplanet-over.png",
 		width=62, height=62,
-		onRelease = function() onPlayBtnRelease('scene11') end
+		onRelease = function() onPlayBtnRelease('scene15') end
 	}
 
 	planet15.x = 5*positionX
