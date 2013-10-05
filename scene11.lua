@@ -47,7 +47,7 @@ function nextScene()
 	physics.stop()
     storyboard.state.score = storyboard.state.score+ (levelTime - (now - startTime))*100
     storyboard.state2.level = 11
-    storyboard.gotoScene( "gameover")
+    storyboard.gotoScene( "loadscene12")
 end
 
 local function gameOver()
@@ -60,18 +60,14 @@ local function onCollision( event )
        if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 
-         if(event.object1.name =="blackholeSprite" or event.object2.name =="blackholeSprite") then
+         if((event.object1.name =="blackholeSprite" and event.object2.name =="planet") or (event.object2.name =="blackholeSprite" and event.object1.name =="planet")) then
         	planetSprite.isVisible = false
         	explosionSprite.x=event.x
         	explosionSprite.y=event.y
 			explosionSprite:play()
-			timer.performWithDelay( 1000, gameOver )
-			    
+			timer.performWithDelay( 1500, gameOver )	    
         end 
-   
-     
 	end
-
 end
  
 
@@ -182,7 +178,32 @@ function scene:createScene( event )
 	blackholeSprite4.y = display.contentCenterY-90
 	blackholeSprite4.name = "blackholeSprite"
 	blackholeSprite4:play()
-	
+
+	blackholeSprite5 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite5.x = display.contentCenterX+50
+	blackholeSprite5.y = display.contentCenterY-90
+	blackholeSprite5.name = "blackholeSprite"
+	blackholeSprite5:play()
+
+	blackholeSprite6 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite6.x = display.contentCenterX+50
+	blackholeSprite6.y = display.contentCenterY-10
+	blackholeSprite6.name = "blackholeSprite"
+	blackholeSprite6:play()
+
+	blackholeSprite7 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite7.x = display.contentCenterX+100
+	blackholeSprite7.y = display.contentCenterY+50
+	blackholeSprite7.name = "blackholeSprite"
+	blackholeSprite7:play()
+
+	blackholeSprite8 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite8.x = display.contentCenterX+120
+	blackholeSprite8.y = display.contentCenterY-50
+	blackholeSprite8.name = "blackholeSprite"
+	blackholeSprite8:play()
+
+
 	
 	
 	borderleft = display.newImage( "borderleftright.png" )
@@ -234,6 +255,22 @@ function scene:createScene( event )
 	
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
 	planetSprite.isSleepingAllowed = false
+	physics.addBody (blackholeSprite, "static",physicsData:get("blackhole"))
+	blackholeSprite.isSleepingAllowed = false
+	physics.addBody (blackholeSprite2, "static",physicsData:get("blackhole"))
+	blackholeSprite2.isSleepingAllowed = false
+	physics.addBody (blackholeSprite3, "static",physicsData:get("blackhole"))
+	blackholeSprite3.isSleepingAllowed = false
+	physics.addBody (blackholeSprite4, "static",physicsData:get("blackhole"))
+	blackholeSprite4.isSleepingAllowed = false
+	physics.addBody (blackholeSprite5, "static",physicsData:get("blackhole"))
+	blackholeSprite5.isSleepingAllowed = false
+	physics.addBody (blackholeSprite6, "static",physicsData:get("blackhole"))
+	blackholeSprite6.isSleepingAllowed = false
+	physics.addBody (blackholeSprite7, "static",physicsData:get("blackhole"))
+	blackholeSprite7.isSleepingAllowed = false
+	physics.addBody (blackholeSprite8, "static",physicsData:get("blackhole"))
+	blackholeSprite8.isSleepingAllowed = false
 	physics.addBody (maze, "static",physicsData:get("mazelevel10_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel10_2"))
 	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
@@ -260,6 +297,10 @@ function scene:createScene( event )
 	screenGroup:insert( blackholeSprite2 )
 	screenGroup:insert( blackholeSprite3 )
 	screenGroup:insert( blackholeSprite4 )
+	screenGroup:insert( blackholeSprite5 )
+	screenGroup:insert( blackholeSprite6 )
+	screenGroup:insert( blackholeSprite7 )
+	screenGroup:insert( blackholeSprite8 )
 	screenGroup:insert( borderleft )
 	screenGroup:insert( borderright )
 	screenGroup:insert( borderdown)

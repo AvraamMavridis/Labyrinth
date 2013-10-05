@@ -67,13 +67,12 @@ local function onCollision( event )
        	if(event.object1.name =="exitscn" or event.object2.name =="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 
-        if(event.object1.name =="blackholeSprite" or event.object2.name =="blackholeSprite") then
+          if((event.object1.name =="blackholeSprite" and event.object2.name =="planet") or (event.object2.name =="blackholeSprite" and event.object1.name =="planet")) then
         	planetSprite.isVisible = false
-        	explosionSprite.x=planetSprite.x
-        	explosionSprite.y=planetSprite.y
+        	explosionSprite.x=event.x
+        	explosionSprite.y=event.y
 			explosionSprite:play()
-			timer.performWithDelay( 3000, gameOver )
-			    
+			timer.performWithDelay( 1000, gameOver )    
         end 
 	end
 

@@ -59,7 +59,7 @@ function scene:createScene( event )
 	
 
 	-- display a background image
-	local background = display.newImageRect( "background.png", display.contentWidth, display.contentHeight )
+	local background = display.newImageRect( "background2.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
 	group:insert( background )
@@ -67,6 +67,9 @@ function scene:createScene( event )
     --minotaur.x=display.contentCenterX
     --minotaur.y=display.contentCenterY-80
 	
+	local levels = display.newImageRect("levels.png",128,32)
+	levels.x = display.contentCenterX
+	levels.y = 20
 	
 
 
@@ -92,7 +95,7 @@ function scene:createScene( event )
 	}
 
 	planet1.x = positionX
-	planet1.y = 60
+	planet1.y = 70
 	group:insert( planet1 )
     end
 
@@ -110,7 +113,7 @@ function scene:createScene( event )
 	}
 
 	planet2.x = 2*positionX
-	planet2.y = 60
+	planet2.y = 70
 	group:insert( planet2 )
 
     else
@@ -124,7 +127,7 @@ function scene:createScene( event )
 	}
 
 	planet2.x = 2*positionX
-	planet2.y = 60
+	planet2.y = 70
 	group:insert( planet2 )
     end
 
@@ -143,7 +146,7 @@ function scene:createScene( event )
 	}
 
 	planet3.x = 3*positionX
-	planet3.y = 60
+	planet3.y = 70
 	group:insert( planet3 )
 
     else
@@ -157,7 +160,7 @@ function scene:createScene( event )
 	}
 
 	planet3.x = 3*positionX
-	planet3.y = 60
+	planet3.y = 70
 	group:insert( planet3 )
     end
 
@@ -176,7 +179,7 @@ function scene:createScene( event )
 	}
 
 	planet4.x = 4*positionX
-	planet4.y = 60
+	planet4.y = 70
 	group:insert( planet4 )
 
     else
@@ -190,7 +193,7 @@ function scene:createScene( event )
 	}
 
 	planet4.x = 4*positionX
-	planet4.y = 60
+	planet4.y = 70
 	group:insert( planet4 )
     end
 
@@ -208,7 +211,7 @@ function scene:createScene( event )
 	}
 
 	planet5.x = 5*positionX
-	planet5.y = 60
+	planet5.y = 70
 	group:insert( planet5 )
 
     else
@@ -222,7 +225,7 @@ function scene:createScene( event )
 	}
 
 	planet5.x = 5*positionX
-	planet5.y = 60
+	planet5.y = 70
 	group:insert( planet5 )
     end
 
@@ -422,6 +425,134 @@ function scene:createScene( event )
 	group:insert( planet11 )
     end
 
+    ------------------------level 12 -----------------------------------------
+    if(highestlevel >= 12) then
+
+    	planet12 = widget.newButton{
+	label="12",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+		onRelease = function() onPlayBtnRelease('scene11') end
+	}
+
+	planet12.x = 2*positionX
+	planet12.y = 220
+	group:insert( planet12 )
+
+    else
+    	planet12 = widget.newButton{
+		label="12",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet-over.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+	}
+
+	planet12.x = 2*positionX
+	planet12.y = 220
+	group:insert( planet12 )
+    end
+
+    ------------------------level 13 -----------------------------------------
+    if(highestlevel >= 13) then
+
+    	planet13 = widget.newButton{
+	label="13",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+		onRelease = function() onPlayBtnRelease('scene11') end
+	}
+
+	planet13.x = 3*positionX
+	planet13.y = 220
+	group:insert( planet13 )
+
+    else
+    	planet13 = widget.newButton{
+		label="13",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet-over.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+	}
+
+	planet13.x = 3*positionX
+	planet13.y = 220
+	group:insert( planet13 )
+    end
+
+    ------------------------level 14 -----------------------------------------
+    if(highestlevel >= 14) then
+
+    	planet14 = widget.newButton{
+	label="14",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+		onRelease = function() onPlayBtnRelease('scene11') end
+	}
+
+	planet14.x = 4*positionX
+	planet14.y = 220
+	group:insert( planet14 )
+
+    else
+    	planet14 = widget.newButton{
+		label="14",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet-over.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+	}
+
+	planet14.x = 4*positionX
+	planet14.y = 220
+	group:insert( planet14 )
+    end
+
+       ------------------------level 15 -----------------------------------------
+    if(highestlevel >= 15) then
+
+    	planet15 = widget.newButton{
+	label="15",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+		onRelease = function() onPlayBtnRelease('scene11') end
+	}
+
+	planet15.x = 5*positionX
+	planet15.y = 220
+	group:insert( planet15 )
+
+    else
+    	planet15 = widget.newButton{
+		label="15",
+		labelColor = { default={255}, over={128} },
+		fontSize=25,
+		defaultFile="levelplanet-over.png",
+		overFile="levelplanet-over.png",
+		width=62, height=62,
+	}
+
+	planet15.x = 5*positionX
+	planet15.y = 220
+	group:insert( planet15 )
+    end
+
 
 
 
@@ -445,7 +576,7 @@ function scene:createScene( event )
 	group:insert( backBtn )
 
 
-
+	group:insert(levels)
 
 
 

@@ -29,6 +29,10 @@ end
 
 local backBtn
 
+
+
+
+
 function scene:createScene( event )
 	local group = self.view
 	
@@ -47,6 +51,10 @@ function scene:createScene( event )
 	for row in db:nrows("SELECT * FROM highscoretable") do
 	 print(row.id .. " " .. row.content)
 	end
+
+	
+
+	
 	
 	
 		-- display a background image
@@ -80,6 +88,7 @@ function scene:createScene( event )
 
 	group:insert( backBtn )
 	group:insert( gameoverText )
+
 
 	
 
