@@ -15,32 +15,23 @@ system.setAccelerometerInterval( 100 )
 
 local physics = require "physics"
 local physicsData = (require "myphysics").physicsData(1.0)
+physics.setReportCollisionsInContentCoordinates( true )
 ---------------------------------------------------------------------------------
 -- BEGINNING OF  IMPLEMENTATION
 ---------------------------------------------------------------------------------
 local displayTime,background,planet,maze,maze2,borders,exitscn
 local startTime=0
-local levelTime = 60
+local levelTime = 30
 local score=0
 local now
 local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 local blackholeSprite = 0
 local blackholeSprite2 = 0
-local explosionSprite = 0
+local explosionSprite
 local planetSprite
 
 
-
-
-
--- local function onGyroscopeDataReceived( event )
---     local deltaRadiansX = event.xRotation * event.deltaTime
---     local deltaDegreesX = deltaRadiansX * (180 / math.pi)
---     local deltaRadiansY = event.yRotation * event.deltaTime
---     local deltaDegreesY = deltaRadiansY * (180 / math.pi)
---     ball:applyForce( deltaDegreesX*2, -deltaDegreesY*2, ball.x, ball.y )
--- end
 
 function onTilt( event )
 	physics.setGravity( (-9.8*event.yGravity), (-9.8*event.xGravity) ) --Το σωστό
@@ -67,7 +58,7 @@ local function onCollision( event )
        	if(event.object1.name =="exitscn" or event.object2.name =="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 
-          if((event.object1.name =="blackholeSprite" and event.object2.name =="planet") or (event.object2.name =="blackholeSprite" and event.object1.name =="planet")) then
+        if((event.object1.name =="blackholeSprite" and event.object2.name =="planet") or (event.object2.name =="blackholeSprite" and event.object1.name =="planet")) then
         	planetSprite.isVisible = false
         	explosionSprite.x=event.x
         	explosionSprite.y=event.y
@@ -77,15 +68,6 @@ local function onCollision( event )
 	end
 
 end
-
--- local function onBlackHoleCollision( event )
--- 	if ( event.phase == "ended" ) then
---        if(event.object1.name =="blackhole" or event.object2.name =="blackhole") then
---        	   gameOver()
---         end 
--- 	end
-
--- end
 
 
 local function blackholeRotate()
@@ -291,9 +273,10 @@ function scene:createScene( event )
 	
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
-	screenGroup:insert( planetSprite )
-	screenGroup:insert( blackholeSprite )
+	screenGroup:insert( planetSprite )	
+    screenGroup:insert( blackholeSprite )
 	screenGroup:insert( blackholeSprite2 )
+	screenGroup:insert( explosionSprite )
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
 	screenGroup:insert( borderleft )
@@ -301,7 +284,6 @@ function scene:createScene( event )
 	screenGroup:insert( borderdown)
 	screenGroup:insert( borderup)
 	screenGroup:insert( exitscn )
-	screenGroup:insert( explosionSprite )
 	screenGroup:insert( instructions )
 	
 

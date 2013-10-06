@@ -64,8 +64,22 @@ end
 local function checkTime(event)
   now = os.time()
   displayTime.text = levelTime - (now - startTime)
+  --change the colour of the timer based on how much time is remaining
+  if ( levelTime - (now - startTime)==levelTime/2) then
+  	transition.to(displayTime,{time=100,size=30})
+  	displayTime:setTextColor( 214,223, 32 )
+  end
+  if ( levelTime - (now - startTime)==5) then
+  	transition.to(displayTime,{time=100,size=40})
+  	displayTime:setTextColor( 239,89, 40 )
+  end
+  --gamve over when there is no remaining time
   if ( levelTime - (now - startTime)==0) then
-	gameOver()
+	planetSprite.isVisible = false
+    explosionSprite.x=planetSprite.x
+    explosionSprite.y=planetSprite.y
+	explosionSprite:play()
+	timer.performWithDelay( 3000, gameOver )
   end
 end
 

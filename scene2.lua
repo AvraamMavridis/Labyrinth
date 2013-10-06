@@ -19,7 +19,7 @@ local physicsData = (require "myphysics").physicsData(1.0)
 ---------------------------------------------------------------------------------
 local displayTime,background,ball,maze,maze2,borders,exitscn
 local startTime=0
-local levelTime = 40
+local levelTime = 20
 local score=0
 local now=0
 local exitSound = audio.loadSound("exit.wav")
