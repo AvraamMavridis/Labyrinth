@@ -48,7 +48,7 @@ function nextScene()
 	physics.stop()
     storyboard.state.score = storyboard.state.score+ (levelTime - (now - startTime))*140
     storyboard.state2.level = 15
-    storyboard.gotoScene( "gameover")
+    storyboard.gotoScene( "loadscene15")
 end
 
 local function gameOver()
@@ -68,18 +68,18 @@ local function onCollision( event )
 			explosionSprite:play()
 			timer.performWithDelay( 1500, gameOver )	    
         end 
-          if((event.object1.name =="maze" and event.object2.name =="planet") or (event.object2.name =="maze" and event.object1.name =="planet")) then
-        	local myCircle = display.newCircle( event.x, event.y, 4 )
-			myCircle:setFillColor(math.random(0, 255),math.random(0, 255),math.random(0, 255))  
-			screenGroup:insert( myCircle )
-			--maze.isVisible
-        end 
-         if((event.object1.name =="maze" and event.object2.name =="alien") or (event.object2.name =="maze" and event.object1.name =="alien")) then
-        	local myCircle = display.newCircle( event.x, event.y, 4 )
-			myCircle:setFillColor(math.random(0, 255),math.random(0, 255),math.random(0, 255))  
-			screenGroup:insert( myCircle )
-			--maze.isVisible
-        end 
+   --        if((event.object1.name =="maze" and event.object2.name =="planet") or (event.object2.name =="maze" and event.object1.name =="planet")) then
+   --      	local myCircle = display.newCircle( event.x, event.y, 4 )
+			-- myCircle:setFillColor(math.random(0, 255),math.random(0, 255),math.random(0, 255))  
+			-- screenGroup:insert( myCircle )
+			-- --maze.isVisible
+   --      end 
+   --       if((event.object1.name =="maze" and event.object2.name =="alien") or (event.object2.name =="maze" and event.object1.name =="alien")) then
+   --      	local myCircle = display.newCircle( event.x, event.y, 4 )
+			-- myCircle:setFillColor(math.random(0, 255),math.random(0, 255),math.random(0, 255))  
+			-- screenGroup:insert( myCircle )
+			-- --maze.isVisible
+   --      end 
           if((event.object1.name =="alien" and event.object2.name =="planet") or (event.object2.name =="alien" and event.object1.name =="planet")) then
         	planetSprite.isVisible = false
         	explosionSprite.x=planetSprite.x
@@ -168,33 +168,35 @@ function scene:createScene( event )
 		    loopDirection = "forward"    -- Optional. Values include: "forward","bounce"
 			}
 
+	
+
+	
+	
+	maze=display.newImage( "maze14.png" )
+	maze.x=display.contentCenterX
+	maze.y=display.contentCenterY
+	maze.name="maze"
+	-- maze.isVisible = false
+
+	
+	maze2=display.newImage( "maze14.png" )
+	maze2.x=display.contentCenterX
+	maze2.y=display.contentCenterY
+	maze2.name="maze"
+	-- maze2.isVisible = false
+
 	alienSprite = display.newSprite( alienSheet, alienSequenceData )
 	alienSprite.x = display.contentCenterX-49
-	alienSprite.y = display.contentCenterY-40
+	alienSprite.y = display.contentCenterY-120
 	alienSprite.name = "alien"
 	alienSprite:play()
 
 	alienSprite2 = display.newSprite( alienSheet, alienSequenceData )
 	alienSprite2.x = display.contentCenterX-49
-	alienSprite2.y = display.contentCenterY+60
+	alienSprite2.y = display.contentCenterY+120
 	alienSprite2.name = "alien"
 	alienSprite2:play()
 
-
-	
-	
-	maze=display.newImage( "maze13.png" )
-	maze.x=display.contentCenterX
-	maze.y=display.contentCenterY
-	maze.name="maze"
-	maze.isVisible = false
-
-	
-	maze2=display.newImage( "maze13.png" )
-	maze2.x=display.contentCenterX
-	maze2.y=display.contentCenterY
-	maze2.name="maze"
-	maze2.isVisible = false
 
 	local blackholeoptions = {
    		width = 32,
@@ -340,7 +342,7 @@ function scene:createScene( event )
     physics.addBody (borderdown, "static",{ friction=0.5, bounce=0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
-	planetSprite:addEventListener ( "touch", nextScene )
+	-- planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
 
 	--Runtime:addEventListener( "enterFrame", mazeRotate)
@@ -353,10 +355,11 @@ function scene:createScene( event )
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
 	screenGroup:insert( planetSprite )
-	screenGroup:insert( alienSprite )
-	screenGroup:insert( alienSprite2 )
+	
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
+	screenGroup:insert( alienSprite )
+	screenGroup:insert( alienSprite2 )
 	screenGroup:insert( blackholeSprite )
 	screenGroup:insert( blackholeSprite2 )
 	screenGroup:insert( blackholeSprite3 )
@@ -384,7 +387,7 @@ function scene:enterScene( event )
 
 	print( "1: enterScene event" )
 	physics.start()
-    audio.play(backgroundMusicSound)
+    audio.play(backgroundMusicSound,{channel = 1,loops=-1})
 	startTime = os.time()
 	transition.to ( displayTime, {alpha=1,time=500} )
 	

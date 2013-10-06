@@ -45,7 +45,7 @@ function nextScene()
 	audio.stop()
 	audio.play( exitSound  )
 	physics.stop()
-    storyboard.state.score = storyboard.state.score+ (levelTime - (now - startTime))*100
+    storyboard.state.score = storyboard.state.score+ (levelTime - (now - startTime))*130
     storyboard.state2.level = 14
     storyboard.gotoScene( "loadscene14")
 end
@@ -287,7 +287,7 @@ function scene:createScene( event )
     physics.addBody (borderdown, "static",{ friction=0.5, bounce=0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
-	planetSprite:addEventListener ( "touch", nextScene )
+	-- planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
 
 	--Runtime:addEventListener( "enterFrame", mazeRotate)
@@ -328,7 +328,7 @@ function scene:enterScene( event )
 
 	print( "1: enterScene event" )
 	physics.start()
-    audio.play(backgroundMusicSound)
+    audio.play(backgroundMusicSound,{channel = 1,loops=-1})
 	startTime = os.time()
 	transition.to ( displayTime, {alpha=1,time=500} )
 	

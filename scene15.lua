@@ -13,19 +13,21 @@ system.setIdleTimer( false )
 
 local physics = require "physics"
 local physicsData = (require "myphysics").physicsData(1.0)
+physics.setReportCollisionsInContentCoordinates( true )
 ---------------------------------------------------------------------------------
 -- BEGINNING OF  IMPLEMENTATION
 ---------------------------------------------------------------------------------
-local displayTime,background,maze,maze2,borders,exitscn
+local displayTime,background,planetSprite,maze,maze2,borders,exitscn
 local startTime=0
-local levelTime = 60
+local levelTime = 240
 local score=0
 local now
 local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
-local alienSprite
 local explosionSprite = 0
-local planetSprite = 0
+local screenGroup
+local alienSprite
+
 -- local function onGyroscopeDataReceived( event )
 --     local deltaRadiansX = event.xRotation * event.deltaTime
 --     local deltaDegreesX = deltaRadiansX * (180 / math.pi)
@@ -33,12 +35,6 @@ local planetSprite = 0
 --     local deltaDegreesY = deltaRadiansY * (180 / math.pi)
 --     ball:applyForce( -deltaDegreesX*6, -deltaDegreesY*6, ball.x, ball.y )
 -- end
-
-
-local function gameOver()
-	audio.stop()
-	storyboard.gotoScene( "gameover", "fade", 300)
-end
 
 
 function onTilt( event )
@@ -50,19 +46,41 @@ function nextScene()
 	audio.stop()
 	audio.play( exitSound  )
 	physics.stop()
-    storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*70
-    storyboard.state2.level = 8
-    storyboard.gotoScene( "loadscene8")
+    storyboard.state.score = storyboard.state.score+ (levelTime - (now - startTime))*140
+    storyboard.state2.level = 15
+    storyboard.gotoScene( "gameover")
 end
 
-
+local function gameOver()
+	audio.stop()
+	storyboard.gotoScene( "gameover", "fade", 300)
+end
 
 local function onCollision( event )
 	if ( event.phase == "began" ) then
        if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 
-        if((event.object1.name =="alien" and event.object2.name =="planet") or (event.object2.name =="alien" and event.object1.name =="planet")) then
+         if((event.object1.name =="blackholeSprite" and event.object2.name =="planet") or (event.object2.name =="blackholeSprite" and event.object1.name =="planet")) then
+        	planetSprite.isVisible = false
+        	explosionSprite.x=event.x
+        	explosionSprite.y=event.y
+			explosionSprite:play()
+			timer.performWithDelay( 1500, gameOver )	    
+        end 
+          if((event.object1.name =="maze" and event.object2.name =="planet") or (event.object2.name =="maze" and event.object1.name =="planet")) then
+        	local myCircle = display.newCircle( event.x, event.y, 4 )
+			myCircle:setFillColor(math.random(0, 255),math.random(0, 255),math.random(0, 255))  
+			screenGroup:insert( myCircle )
+			--maze.isVisible
+        end 
+         if((event.object1.name =="maze" and event.object2.name =="alien") or (event.object2.name =="maze" and event.object1.name =="alien")) then
+        	local myCircle = display.newCircle( event.x, event.y, 4 )
+			myCircle:setFillColor(math.random(0, 255),math.random(0, 255),math.random(0, 255))  
+			screenGroup:insert( myCircle )
+			--maze.isVisible
+        end 
+          if((event.object1.name =="alien" and event.object2.name =="planet") or (event.object2.name =="alien" and event.object1.name =="planet")) then
         	planetSprite.isVisible = false
         	explosionSprite.x=planetSprite.x
         	explosionSprite.y=planetSprite.y
@@ -70,7 +88,12 @@ local function onCollision( event )
 			timer.performWithDelay( 1500, gameOver )    
         end 
 	end
+end
 
+
+local function moveAlien()
+	alienSprite:applyForce( math.random(-50, 50), math.random(-50, 50), alienSprite.x, alienSprite.y )
+	alienSprite2:applyForce( math.random(-50, 50), math.random(-50, 50), alienSprite2.x, alienSprite2.y )
 end
  
 
@@ -84,17 +107,13 @@ end
 
 
 
-local function moveAlien()
-	alienSprite:applyForce( math.random(-50, 50), math.random(-50, 50), alienSprite.x, alienSprite.y )
-end
-
 
 
 
 
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
-	local screenGroup = self.view
+	screenGroup = self.view
 	physics.start(); 
 	physics.setGravity( 0,0 )
 	
@@ -106,16 +125,6 @@ function scene:createScene( event )
 	background = display.newImageRect( "background2.png", display.contentWidth, display.contentHeight )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
-
-	maze=display.newImage( "maze7.png" )
-	maze.x=display.contentCenterX
-	maze.y=display.contentCenterY
-	maze.name="maze"
-	
-	maze2=display.newImage( "maze7.png" )
-	maze2.x=display.contentCenterX
-	maze2.y=display.contentCenterY
-	maze2.name="maze2"
 		
 	local planetoptions = {
    		width = 24,
@@ -141,7 +150,7 @@ function scene:createScene( event )
 	planetSprite.name = "planet"
 	planetSprite:play()
 
-	local alienoptions = {
+		local alienoptions = {
    		width = 32,
    		height = 32,
    		numFrames = 8
@@ -161,11 +170,99 @@ function scene:createScene( event )
 
 	alienSprite = display.newSprite( alienSheet, alienSequenceData )
 	alienSprite.x = display.contentCenterX-49
-	alienSprite.y = display.contentCenterY+40
+	alienSprite.y = display.contentCenterY-40
 	alienSprite.name = "alien"
 	alienSprite:play()
 
+	alienSprite2 = display.newSprite( alienSheet, alienSequenceData )
+	alienSprite2.x = display.contentCenterX-49
+	alienSprite2.y = display.contentCenterY+60
+	alienSprite2.name = "alien"
+	alienSprite2:play()
+
+
 	
+	
+	maze=display.newImage( "maze13.png" )
+	maze.x=display.contentCenterX
+	maze.y=display.contentCenterY
+	maze.name="maze"
+	maze.isVisible = false
+
+	
+	maze2=display.newImage( "maze13.png" )
+	maze2.x=display.contentCenterX
+	maze2.y=display.contentCenterY
+	maze2.name="maze"
+	maze2.isVisible = false
+
+	local blackholeoptions = {
+   		width = 32,
+   		height = 24,
+   		numFrames = 4
+		}
+
+	local blackholeSheet = graphics.newImageSheet( "blackholesheet.png", blackholeoptions )
+
+	local blackholeSequenceData =
+			{
+    		name="blackholeflashing",
+		    start=1, --Starting loop
+		    count=4,
+		    time=800,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
+		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
+		    loopDirection = "forward"    -- Optional. Values include: "forward","bounce"
+			}
+
+	blackholeSprite = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite.x = display.contentCenterX+30
+	blackholeSprite.y = display.contentCenterY
+	blackholeSprite.name = "blackholeSprite"
+	blackholeSprite:play()
+
+	blackholeSprite2 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite2.x = 175
+	blackholeSprite2.y = display.contentCenterY+45
+	blackholeSprite2.name = "blackholeSprite"
+	blackholeSprite2:play()
+
+	blackholeSprite3 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite3.x = display.contentCenterX-35
+	blackholeSprite3.y = display.contentCenterY
+	blackholeSprite3.name = "blackholeSprite"
+	blackholeSprite3:play()
+
+	blackholeSprite4 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite4.x = display.contentCenterX-10
+	blackholeSprite4.y = display.contentCenterY-100
+	blackholeSprite4.name = "blackholeSprite"
+	blackholeSprite4:play()
+
+	blackholeSprite5 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	blackholeSprite5.x = display.contentCenterX+50
+	blackholeSprite5.y = display.contentCenterY-105
+	blackholeSprite5.name = "blackholeSprite"
+	blackholeSprite5:play()
+
+	-- blackholeSprite6 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	-- blackholeSprite6.x = display.contentCenterX+50
+	-- blackholeSprite6.y = display.contentCenterY-10
+	-- blackholeSprite6.name = "blackholeSprite"
+	-- blackholeSprite6:play()
+
+	-- blackholeSprite7 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	-- blackholeSprite7.x = display.contentCenterX+100
+	-- blackholeSprite7.y = display.contentCenterY+50
+	-- blackholeSprite7.name = "blackholeSprite"
+	-- blackholeSprite7:play()
+
+	-- blackholeSprite8 = display.newSprite( blackholeSheet, blackholeSequenceData )
+	-- blackholeSprite8.x = display.contentCenterX+120
+	-- blackholeSprite8.y = display.contentCenterY-50
+	-- blackholeSprite8.name = "blackholeSprite"
+	-- blackholeSprite8:play()
+
+
 	
 	
 	borderleft = display.newImage( "borderleftright.png" )
@@ -212,12 +309,31 @@ function scene:createScene( event )
 	explosionSprite.x = 100
 	explosionSprite.y = 50
 	explosionSprite.name = "explosion"
+
+
 	
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
 	planetSprite.isSleepingAllowed = false
 	physics.addBody (alienSprite, "dynamic",physicsData:get("earthphysics"))
-	physics.addBody (maze, "static",physicsData:get("mazelevel7_1"))
-	physics.addBody (maze2, "static",physicsData:get("mazelevel7_2"))
+	physics.addBody (alienSprite2, "dynamic",physicsData:get("earthphysics"))
+	physics.addBody (blackholeSprite, "static",physicsData:get("blackhole"))
+	blackholeSprite.isSleepingAllowed = false
+	physics.addBody (blackholeSprite2, "static",physicsData:get("blackhole"))
+	blackholeSprite2.isSleepingAllowed = false
+	physics.addBody (blackholeSprite3, "static",physicsData:get("blackhole"))
+	blackholeSprite3.isSleepingAllowed = false
+	physics.addBody (blackholeSprite4, "static",physicsData:get("blackhole"))
+	blackholeSprite4.isSleepingAllowed = false
+	physics.addBody (blackholeSprite5, "static",physicsData:get("blackhole"))
+	blackholeSprite5.isSleepingAllowed = false
+	-- physics.addBody (blackholeSprite6, "static",physicsData:get("blackhole"))
+	-- blackholeSprite6.isSleepingAllowed = false
+	-- physics.addBody (blackholeSprite7, "static",physicsData:get("blackhole"))
+	-- blackholeSprite7.isSleepingAllowed = false
+	-- physics.addBody (blackholeSprite8, "static",physicsData:get("blackhole"))
+	-- blackholeSprite8.isSleepingAllowed = false
+	physics.addBody (maze, "static",physicsData:get("mazelevel13_1"))
+	physics.addBody (maze2, "static",physicsData:get("mazelevel13_2"))
 	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
     physics.addBody (borderright, "static",{ friction=0.5, bounce=0 })
     physics.addBody (borderup, "static",{ friction=0.5, bounce=0 })
@@ -226,25 +342,36 @@ function scene:createScene( event )
 	
 	-- planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
-	Runtime:addEventListener("enterFrame", moveAlien)
+
 	--Runtime:addEventListener( "enterFrame", mazeRotate)
 	--Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )
 	Runtime:addEventListener( "collision", onCollision )
 	Runtime:addEventListener( "accelerometer", onTilt )
+	Runtime:addEventListener("enterFrame", moveAlien)
 
 	
 	screenGroup:insert( background )
 	screenGroup:insert(displayTime)
+	screenGroup:insert( planetSprite )
+	screenGroup:insert( alienSprite )
+	screenGroup:insert( alienSprite2 )
 	screenGroup:insert( maze )
 	screenGroup:insert( maze2 )
-	screenGroup:insert( planetSprite )
+	screenGroup:insert( blackholeSprite )
+	screenGroup:insert( blackholeSprite2 )
+	screenGroup:insert( blackholeSprite3 )
+	screenGroup:insert( blackholeSprite4 )
+	screenGroup:insert( blackholeSprite5 )
+	-- screenGroup:insert( blackholeSprite6 )
+	-- screenGroup:insert( blackholeSprite7 )
+	-- screenGroup:insert( blackholeSprite8 )
 	screenGroup:insert( borderleft )
 	screenGroup:insert( borderright )
 	screenGroup:insert( borderdown)
 	screenGroup:insert( borderup)
-	screenGroup:insert( alienSprite )
 	screenGroup:insert( exitscn )
 	screenGroup:insert( explosionSprite )
+
 	
 	
 end
@@ -275,10 +402,11 @@ function scene:exitScene( event )
 	Runtime:removeEventListener( "enterFrame", checkTime )
 	
 	-- Runtime:removeEventListener( "enterFrame", mazeRotate )
-	Runtime:removeEventListener("enterFrame", moveAlien)
+
     -- Runtime:removeEventListener( "gyroscope", onGyroscopeDataReceived )
     Runtime:removeEventListener( "collision", onCollision )
     Runtime:removeEventListener( "accelerometer", onTilt )
+    Runtime:removeEventListener("enterFrame", moveAlien)
 
 end
 

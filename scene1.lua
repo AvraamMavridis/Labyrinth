@@ -191,7 +191,7 @@ function scene:createScene( event )
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 
 	--ball touch event only for testing
-	planetSprite:addEventListener ( "touch", nextScene )
+	-- planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
 	Runtime:addEventListener( "accelerometer", onTilt )
 	-- Runtime:addEventListener( "gyroscope", onGyroscopeDataReceived )

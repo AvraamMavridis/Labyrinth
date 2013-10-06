@@ -239,7 +239,7 @@ function scene:createScene( event )
     physics.addBody (borderdown, "static",{ friction=0.5, bounce=0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
-	planetSprite:addEventListener ( "touch", nextScene )
+	-- planetSprite:addEventListener ( "touch", nextScene )
 	Runtime:addEventListener("enterFrame", checkTime)
 	Runtime:addEventListener("enterFrame", moveAlien)
 
@@ -274,7 +274,7 @@ function scene:enterScene( event )
 
 	print( "1: enterScene event" )
 	physics.start()
-    audio.play(backgroundMusicSound)
+    audio.play(backgroundMusicSound,{channel = 1,loops=-1})
 	startTime = os.time()
 	transition.to ( displayTime, {alpha=1,time=500} )
 	
