@@ -4,28 +4,33 @@
 --
 ---------------------------------------------------------------------------------
 
-
+--Storyboard is used to control transactions between different leves
 local storyboard = require( "storyboard" )
 local scene = storyboard.newScene()
 
-
+--without this function the screen will turn off after some seconds because there
+--are no touch/tap events on the screen
 system.setIdleTimer( false )
+--this function set how frequent the system gets information from the server
 system.setAccelerometerInterval( 100 )
 
+--this includes the Corona's physics library
 local physics = require "physics"
+--this loads the physics for the game's objects
 local physicsData = (require "myphysics").physicsData(1.0)
 ---------------------------------------------------------------------------------
 -- BEGINNING OF  IMPLEMENTATION
 ---------------------------------------------------------------------------------
+--Variables defifinition
 local displayTime,background,ball,maze,maze2,borders,exitscn,instructions
-local startTime=0
+local startTime = 0
 local levelTime = 40
-
 local now
 local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 
 
+--This function is called when we have a accelerator event
 function onTilt( event )
 	--deltaDegreesXText.text = "xG: " .. (event.xGravity)
 	--deltaDegreesYText.text =  "yG: " .. (event.yGravity)
@@ -39,7 +44,7 @@ function onTilt( event )
 	--physics.setGravity( (9.8*event.xGravity), (-9.8*event.yGravity) ) -- Λάθος άξονας
 	--physics.setGravity( (9.8*event.yGravity), (-9.8*event.xGravity) ) -- Σωστός άξονας λάθος κατεύθυνση
 	--physics.setGravity( (9.8*event.yGravity), (9.8*event.xGravity) ) -- Σωστός άξονας λάθος κατευθύνσεις και στους 2 άξονες
-	physics.setGravity( (-9.8*event.yGravity), (-9.8*event.xGravity) ) --Το σωστό
+	physics.setGravity( (-9.8 * event.yGravity), (-9.8 * event.xGravity) ) --Το σωστό
      --ball:applyForce( ((-9.8*event.yGravity)*2), ((-9.8*event.xGravity)*2), ball.x, ball.y )
 end
 
@@ -52,45 +57,48 @@ end
 -- end
 
 
-
+--This function is used for scene transaction, storyboard.state.score is a global variable
+--to keep the score between scenes
 function nextScene()
 	audio.stop()
 	audio.play( exitSound  )
 	physics.stop()
-    storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*10
+    storyboard.state.score = storyboard.state.score + (levelTime - (now - startTime)) * 10
     storyboard.state2.level = 2
     storyboard.gotoScene( "loadscene2")
 end
 
+--This function is called when we have collision between two objects
 local function onCollision( event )
 	if ( event.phase == "began" ) then
-       if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
+       if(event.object1.name == "exitscn" or event.object2.name == "exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 
 	end
 
 end
  
+--This function is called for transaction to the gameover scene 
 local function gameOver()
 	audio.stop()
 	storyboard.gotoScene( "gameover", "fade", 300)
 end
 
---function to display the time
+--function to display the time and check if the level' time has finished
 local function checkTime(event)
   now = os.time()
   displayTime.text = levelTime - (now - startTime)
   --change the colour of the timer based on how much time is remaining
-  if ( levelTime - (now - startTime)==levelTime/2) then
-  	transition.to(displayTime,{time=100,size=30})
+  if ( levelTime - (now - startTime) == levelTime / 2) then
+  	transition.to(displayTime,{time = 100, size = 30})
   	displayTime:setTextColor( 214,223, 32 )
   end
-  if ( levelTime - (now - startTime)==5) then
-  	transition.to(displayTime,{time=100,size=40})
+  if ( levelTime - (now - startTime) == 5) then
+  	transition.to(displayTime,{time = 100, size = 40})
   	displayTime:setTextColor( 239,89, 40 )
   end
   --gamve over when there is no remaining time
-  if ( levelTime - (now - startTime)==0) then
+  if ( levelTime - (now - startTime) == 0) then
 	gameOver()
   end
 end
@@ -114,6 +122,7 @@ function scene:createScene( event )
 	background:setReferencePoint( display.TopLeftReferencePoint )
 	background.x, background.y = 0, 0
 
+    --options for the planet Sprite
 	local planetoptions = {
    		width = 24,
    		height = 24,
@@ -124,10 +133,10 @@ function scene:createScene( event )
 
 	local planetSequenceData =
 			{
-    		name="planetsequence",
-		    start=1,
-		    count=5,
-		    time=500,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
+    		name = "planetsequence",
+		    start = 1,
+		    count = 5,
+		    time = 500,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
 		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
 		    loopDirection = "bounce"    -- Optional. Values include: "forward","bounce"
 			}
@@ -141,15 +150,15 @@ function scene:createScene( event )
 	planetSprite:play()
 
 
-	maze=display.newImage( "maze1.png" )
-	maze.x=display.contentCenterX
-	maze.y=display.contentCenterY
-	maze.name="maze"
+	maze = display.newImage( "maze1.png" )
+	maze.x = display.contentCenterX
+	maze.y = display.contentCenterY
+	maze.name = "maze"
 
-	maze2=display.newImage( "maze1.png" )
-	maze2.x=display.contentCenterX
-	maze2.y=display.contentCenterY
-	maze2.name="maze2"
+	maze2 = display.newImage( "maze1.png" )
+	maze2.x = display.contentCenterX
+	maze2.y = display.contentCenterY
+	maze2.name = "maze2"
 
 	exitscn = display.newImage("exit.png")
 	exitscn.x = display.contentWidth-30
@@ -172,22 +181,22 @@ function scene:createScene( event )
 	borderdown.x = display.contentCenterX
 	borderdown.y = display.contentHeight - 1 
 
-	instructions=display.newImage( "instructions_level1.png" )
-	instructions.x=display.contentCenterX
-	instructions.y=display.contentCenterY
-	instructions.name="instructions"
+	instructions = display.newImage( "instructions_level1.png" )
+	instructions.x = display.contentCenterX
+	instructions.y = display.contentCenterY
+	instructions.name = "instructions"
 
-	transition.to( instructions, { time=8000, alpha=0, y = 100} )
+	transition.to( instructions, { time = 8000, alpha = 0, y = 100} )
 
 
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
 	planetSprite.isSleepingAllowed = false
 	physics.addBody (maze, "static",physicsData:get("mazelevel1_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel1_2"))
-    physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
-    physics.addBody (borderright, "static",{ friction=0.5, bounce=0 })
-    physics.addBody (borderup, "static",{ friction=0.5, bounce=0 })
-    physics.addBody (borderdown, "static",{ friction=0.5, bounce=0 })
+    physics.addBody (borderleft, "static",{ friction = 0.5, bounce = 0 })
+    physics.addBody (borderright, "static",{ friction = 0.5, bounce = 0 })
+    physics.addBody (borderup, "static",{ friction = 0.5, bounce = 0 })
+    physics.addBody (borderdown, "static",{ friction = 0.5, bounce = 0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 
 	--ball touch event only for testing
@@ -198,7 +207,6 @@ function scene:createScene( event )
 	Runtime:addEventListener( "collision", onCollision )
 
 	screenGroup:insert( background )
-	
 	screenGroup:insert(displayTime)
 	screenGroup:insert( planetSprite )
 	screenGroup:insert( maze )
@@ -217,12 +225,10 @@ end
 
 -- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
-
-	print( "1: enterScene event" )
 	physics.start()
-    audio.play(backgroundMusicSound,{channel = 1,loops=-1})
+    audio.play(backgroundMusicSound,{channel = 1,loops = -1})
 	startTime = os.time()
-	transition.to ( displayTime, {alpha=1,time=500} )
+	transition.to ( displayTime, {alpha = 1,time = 500} )
 
 
 end
@@ -230,8 +236,6 @@ end
 
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
-
-	print( "1: exitScene event" )
 	physics.stop( )
     audio.stop()
 
@@ -245,8 +249,6 @@ end
 
 -- Called prior to the removal of scene's "view" (display group)
 function scene:destroyScene( event )
-
-	print( "((destroying scene 1's view))" )
 	package.loaded[physics] = nil
 	physics = nil
 end

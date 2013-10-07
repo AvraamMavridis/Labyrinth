@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------
 --
--- scene1.lua
+-- scene2.lua
 --
 ---------------------------------------------------------------------------------
 
@@ -18,10 +18,10 @@ local physicsData = (require "myphysics").physicsData(1.0)
 -- BEGINNING OF  IMPLEMENTATION
 ---------------------------------------------------------------------------------
 local displayTime,background,ball,maze,maze2,borders,exitscn
-local startTime=0
+local startTime = 0
 local levelTime = 20
-local score=0
-local now=0
+local score = 0
+local now = 0
 local exitSound = audio.loadSound("exit.wav")
 local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 
@@ -29,7 +29,7 @@ local backgroundMusicSound = audio.loadStream ( "background.mp3" )
 
 
 function onTilt( event )
-	physics.setGravity( (-9.8*event.yGravity), (-9.8*event.xGravity) ) --Το σωστό
+	physics.setGravity( (-9.8 * event.yGravity), (-9.8 * event.xGravity) ) --Το σωστό
 end
 
 
@@ -38,14 +38,14 @@ function nextScene()
 	audio.stop()
 	audio.play( exitSound  )
 	physics.stop()
-    storyboard.state.score =storyboard.state.score+ (levelTime - (now - startTime))*20
+    storyboard.state.score = storyboard.state.score + (levelTime - (now - startTime)) * 20
     storyboard.state2.level = 3
     storyboard.gotoScene( "loadscene3")
 end
 
 local function onCollision( event )
 	if ( event.phase == "began" ) then
-       if(event.object1.name=="exitscn" or event.object2.name=="exitscn") then
+       if(event.object1.name == "exitscn" or event.object2.name == "exitscn") then
        		timer.performWithDelay ( 200, nextScene )
         end 
 	end
@@ -61,16 +61,16 @@ local function checkTime(event)
   now = os.time()
   displayTime.text = levelTime - (now - startTime)
   --change the colour of the timer based on how much time is remaining
-  if ( levelTime - (now - startTime)==levelTime/2) then
-  	transition.to(displayTime,{time=100,size=30})
+  if ( levelTime - (now - startTime) == levelTime / 2) then
+  	transition.to(displayTime,{time = 100, size = 30})
   	displayTime:setTextColor( 214,223, 32 )
   end
-  if ( levelTime - (now - startTime)==5) then
-  	transition.to(displayTime,{time=100,size=40})
+  if ( levelTime - (now - startTime) == 5) then
+  	transition.to(displayTime,{time = 100, size = 40})
   	displayTime:setTextColor( 239,89, 40 )
   end
   --gamve over when there is no remaining time
-  if ( levelTime - (now - startTime)==0) then
+  if ( levelTime - (now - startTime) == 0) then
 	gameOver()
   end
 end
@@ -104,10 +104,10 @@ function scene:createScene( event )
 
 	local planetSequenceData =
 			{
-    		name="planetsequence",
-		    start=1,
-		    count=5,
-		    time=500,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
+    		name = "planetsequence",
+		    start = 1,
+		    count = 5,
+		    time = 500,        -- Optional. In ms.  If not supplied, then sprite is frame-based.
 		    loopCount = 0,    -- Optional. Default is 0 (loop indefinitely)
 		    loopDirection = "bounce"    -- Optional. Values include: "forward","bounce"
 			}
@@ -121,15 +121,15 @@ function scene:createScene( event )
 	planetSprite:play()
 
 
-	maze=display.newImage( "maze2.png" )
-	maze.x=display.contentCenterX
-	maze.y=display.contentCenterY
-	maze.name="maze"
+	maze = display.newImage( "maze2.png" )
+	maze.x = display.contentCenterX
+	maze.y = display.contentCenterY
+	maze.name = "maze"
 	
-	maze2=display.newImage( "maze2.png" )
-	maze2.x=display.contentCenterX
-	maze2.y=display.contentCenterY
-	maze2.name="maze2"
+	maze2 = display.newImage( "maze2.png" )
+	maze2.x = display.contentCenterX
+	maze2.y = display.contentCenterY
+	maze2.name = "maze2"
 	
 	borderleft = display.newImage( "borderleftright.png" )
 	borderleft.x = 1
@@ -147,19 +147,19 @@ function scene:createScene( event )
 	borderdown.x = display.contentCenterX
 	borderdown.y = display.contentHeight - 1 
 	
-	exitscn=display.newImage("exit.png")
-	exitscn.x=display.contentWidth-30
-	exitscn.y=display.contentCenterY
-	exitscn.name="exitscn"
+	exitscn = display.newImage("exit.png")
+	exitscn.x = display.contentWidth-30
+	exitscn.y = display.contentCenterY
+	exitscn.name = "exitscn"
 	
 	physics.addBody (planetSprite, "dynamic",physicsData:get("earthphysics"))
 	planetSprite.isSleepingAllowed = false
 	physics.addBody (maze, "static",physicsData:get("mazelevel2_1"))
 	physics.addBody (maze2, "static",physicsData:get("mazelevel2_2"))
-	physics.addBody (borderleft, "static",{ friction=0.5, bounce=0 })
-    physics.addBody (borderright, "static",{ friction=0.5, bounce=0 })
-    physics.addBody (borderup, "static",{ friction=0.5, bounce=0 })
-    physics.addBody (borderdown, "static",{ friction=0.5, bounce=0 })
+	physics.addBody (borderleft, "static",{ friction = 0.5, bounce = 0 })
+    physics.addBody (borderright, "static",{ friction = 0.5, bounce = 0 })
+    physics.addBody (borderup, "static",{ friction = 0.5, bounce = 0 })
+    physics.addBody (borderdown, "static",{ friction = 0.5, bounce = 0 })
 	physics.addBody (exitscn, "static",physicsData:get("exitscn"))
 	
 	-- planetSprite:addEventListener ( "touch", nextScene )
@@ -189,17 +189,14 @@ function scene:enterScene( event )
 	physics.start()
     audio.play(backgroundMusicSound,{channel = 1,loops=-1})
 	startTime = os.time()
-	transition.to ( displayTime, {alpha=1,time=500} )
+	transition.to ( displayTime, {alpha = 1,time = 500} )
 end
 
 
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
-	
-	print( "1: exitScene event" )
 	physics.stop( )
     audio.stop()
-
 	Runtime:removeEventListener( "enterFrame", checkTime )
     Runtime:removeEventListener( "accelerometer", onTilt )
     Runtime:removeEventListener( "collision", onCollision )
